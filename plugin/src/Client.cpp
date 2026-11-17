@@ -3,6 +3,7 @@
 #include <ixwebsocket/IXNetSystem.h>
 #include <ixwebsocket/IXWebSocket.h>
 
+Client::Client() = default;
 Client::~Client() = default;
 
 void Client::Start(const std::string& a_server)

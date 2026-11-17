@@ -31,7 +31,7 @@ public:
 	~Client();
 
 private:
-	Client() = default;
+	Client();
 
 	void Loop();
 	void Push(json a_msg);

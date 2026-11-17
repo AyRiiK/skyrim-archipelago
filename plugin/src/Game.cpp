@@ -99,7 +99,7 @@ namespace
 			return;
 		}
 		RE::BSTSmartPointer<RE::BSScript::IStackCallbackFunctor> callback;
-		auto* args = RE::MakeFunctionArguments(std::forward<Args>(a_args)...);
+		auto* args = RE::MakeFunctionArguments(std::decay_t<Args>(a_args)...);
 		vm->DispatchStaticCall(RE::BSFixedString(a_class), RE::BSFixedString(a_fn), args, callback);
 	}
 
