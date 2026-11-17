@@ -76,6 +76,10 @@ namespace
 		int                              goal{ 0 };
 		int                              dragonSoulChecks{ 0 };
 		bool                             autoUnlockShouts{ true };
+		bool                             deathLink{ false };
+		bool                             wasDead{ false };
+		bool                             ignoreNextDeath{ false };
+		std::optional<std::string>       pendingDeathFrom;
 		std::map<int, std::string>       players;
 		std::vector<json>                items;
 		std::set<std::int64_t>           checked;
@@ -178,6 +182,10 @@ namespace
 			g_session.goal = slotData.value("goal", 0);
 			g_session.dragonSoulChecks = slotData.value("dragon_soul_checks", 0);
 			g_session.autoUnlockShouts = slotData.value("auto_unlock_shouts", 1) != 0;
+			g_session.deathLink = slotData.value("death_link", 0) != 0;
+			if (g_session.deathLink) {
+				Client::Get().Send({ { "cmd", "ConnectUpdate" }, { "tags", json::array({ "AP", "DeathLink" }) } });
+			}
 			g_session.checked.clear();
 			for (const auto& id : a_msg.value("checked_locations", json::array())) {
 				g_session.checked.insert(id.get<std::int64_t>());
@@ -218,12 +226,52 @@ namespace
 			} else if (type == "Chat" || type == "ServerChat") {
 				Game::Notify(a_msg.value("message", std::string{}));
 			}
+		} else if (cmd == "Bounced") {
+			const auto tags = a_msg.value("tags", json::array());
+			const bool isDeathLink = std::find(tags.begin(), tags.end(), "DeathLink") != tags.end();
+			const auto data = a_msg.value("data", json::object());
+			const auto source = data.value("source", std::string{});
+			if (isDeathLink && g_session.deathLink && source != Config::Get().slot) {
+				g_session.pendingDeathFrom = source;
+			}
 		} else if (cmd == "_closed") {
 			if (g_session.connected) {
 				Game::Notify("Archipelago : connexion perdue, reconnexion…");
 			}
 			g_session.connected = false;
 		}
+	}
+
+	// ------------------------------------------------------------------ //
+	// DeathLink
+	// ------------------------------------------------------------------ //
+	void HandleDeathLink()
+	{
+		auto*      player = Player();
+		const bool dead = player->IsDead(false);
+
+		if (g_session.pendingDeathFrom && !dead) {
+			const auto source = *g_session.pendingDeathFrom;
+			g_session.pendingDeathFrom.reset();
+			g_session.ignoreNextDeath = true;
+			Game::Notify("DeathLink : " + source + " est mort. Toi aussi.");
+			player->AsActorValueOwner()->DamageActorValue(RE::ActorValue::kHealth, 1000000.0f);
+		}
+
+		if (dead && !g_session.wasDead) {
+			if (g_session.ignoreNextDeath) {
+				g_session.ignoreNextDeath = false;
+			} else if (g_session.deathLink) {
+				const auto now = std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch()).count();
+				Client::Get().Send({
+					{ "cmd", "Bounce" },
+					{ "tags", json::array({ "DeathLink" }) },
+					{ "data", { { "time", now }, { "source", Config::Get().slot }, { "cause", Config::Get().slot + " est mort dans Skyrim." } } },
+				});
+				logger::info("DeathLink sent");
+			}
+		}
+		g_session.wasDead = dead;
 	}
 
 	// ------------------------------------------------------------------ //
@@ -572,6 +620,9 @@ namespace Game
 		g_session.mismatchWarned = false;
 		g_session.goalSent = false;
 		g_session.lockedWarnedFor.clear();
+		g_session.wasDead = false;
+		g_session.ignoreNextDeath = false;
+		g_session.pendingDeathFrom.reset();
 		if (Config::Get().slot.empty()) {
 			Notify("Archipelago : renseigne ton nom de joueur dans SkyrimArchipelago.ini.");
 		}
@@ -602,6 +653,7 @@ namespace Game
 		TrackDragonSouls();
 
 		if (IsBound()) {
+			HandleDeathLink();
 			ApplyItems();
 			CheckLocations();
 		}

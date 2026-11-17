@@ -49,5 +49,5 @@ Lance le jeu via SKSE. Le journal du plugin est dans `Documents/My Games/Skyrim 
 
 - Les mots de pouvoir appris normalement (murs de mots, Grises-Barbes) ne sont pas encore bloqués.
 - Le piège « attaque de dragon » n'est pas encore implémenté.
-- Le DeathLink n'est pas encore géré par le plugin.
+- DeathLink : géré (option `death_link` du YAML) — à tester.
 - Certaines correspondances (quête de la Corne de Jurgen, potion de magie) sont à confirmer avec le journal du plugin.

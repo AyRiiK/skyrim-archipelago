@@ -10,6 +10,6 @@
     "nlohmann-json",
     "rapidcsv",
     "spdlog",
-    { "name": "ixwebsocket", "features": ["openssl"] }
+    { "name": "ixwebsocket", "default-features": false, "features": ["openssl"] }
   ]
 }
