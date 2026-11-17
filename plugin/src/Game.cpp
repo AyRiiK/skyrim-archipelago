@@ -378,7 +378,8 @@ namespace
 			ApplyConsumable(it->second);
 			if (newCount <= 5) {
 				const auto sender = entry.value("player", -1);
-				std::string from = sender == g_session.slot ? "" : " (de " + PlayerName(sender) + ")";
+				// Slot 0 is the server itself (starting inventory, /send).
+				std::string from = (sender == g_session.slot || sender == 0) ? "" : " (de " + PlayerName(sender) + ")";
 				Game::Notify("Reçu : " + it->second.fr + from);
 			}
 		}

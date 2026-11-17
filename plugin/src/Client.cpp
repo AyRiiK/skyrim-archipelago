@@ -17,6 +17,9 @@ void Client::Start(const std::string& a_server)
 	// "archipelago.gg:38281" -> try secure first, then plain websocket.
 	if (a_server.starts_with("ws://") || a_server.starts_with("wss://")) {
 		_urls = { a_server };
+	} else if (a_server.starts_with("localhost") || a_server.starts_with("127.0.0.1")) {
+		// A server on this PC never uses TLS.
+		_urls = { "ws://" + a_server, "wss://" + a_server };
 	} else {
 		_urls = { "wss://" + a_server, "ws://" + a_server };
 	}
