@@ -29,6 +29,8 @@ add_commonlibsse_plugin(
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/PCH.h)
 target_include_directories(${PROJECT_NAME} PRIVATE src)
+# Keep <windows.h> from pulling the old winsock.h (conflicts with ixwebsocket) and the min/max macros.
+target_compile_definitions(${PROJECT_NAME} PRIVATE WIN32_LEAN_AND_MEAN NOMINMAX)
 target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json ixwebsocket::ixwebsocket)
 
 if(MSVC)

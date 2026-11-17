@@ -28,6 +28,8 @@ public:
 
 	bool IsOpen() const { return _open.load(); }
 
+	~Client();
+
 private:
 	Client() = default;
 
