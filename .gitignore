@@ -1,0 +1,6 @@
+plugin/build/
+__pycache__/
+*.pyc
+/package/
+*.apworld
+*.zip

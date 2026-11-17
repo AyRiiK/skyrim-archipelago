@@ -1,0 +1,125 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apworld:
+    name: APWorld (tests + package)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch Archipelago 0.6.8
+        run: git clone --depth 1 --branch 0.6.8 https://github.com/ArchipelagoMW/Archipelago.git ap
+
+      - name: Install Archipelago requirements
+        run: pip install -r ap/requirements.txt
+
+      - name: Run the Skyrim world tests
+        run: |
+          cp -r apworld/skyrim ap/worlds/skyrim
+          cd ap
+          python -m unittest discover -s worlds/skyrim/test -t . < /dev/null
+
+      - name: Check the plugin data is up to date
+        run: |
+          python tools/gen_plugin_data.py
+          git diff --exit-code plugin/dist/SKSE/Plugins/SkyrimArchipelago.json
+
+      - name: Package skyrim.apworld
+        run: |
+          python - <<'EOF'
+          import json, pathlib, zipfile
+          src = pathlib.Path("apworld/skyrim")
+          manifest = json.loads((src / "archipelago.json").read_text())
+          manifest.update({"version": 7, "compatible_version": 7})
+          with zipfile.ZipFile("skyrim.apworld", "w", zipfile.ZIP_DEFLATED) as zf:
+              for p in sorted(src.rglob("*")):
+                  if p.is_file() and "__pycache__" not in p.parts and p.name != "archipelago.json":
+                      zf.write(p, pathlib.Path("skyrim") / p.relative_to(src))
+              zf.writestr("skyrim/archipelago.json", json.dumps(manifest, indent=2))
+          EOF
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: skyrim-apworld
+          path: skyrim.apworld
+
+  plugin:
+    name: SKSE plugin (Windows)
+    runs-on: windows-latest
+    env:
+      VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg_cache,readwrite"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Fetch CommonLib tags (for its prebuilt library)
+        run: git -C plugin/lib/commonlibsse-ng fetch --tags --depth 1
+
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Cache vcpkg packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/vcpkg_cache
+          key: vcpkg-${{ hashFiles('plugin/vcpkg.json', 'plugin/vcpkg-configuration.json') }}
+          restore-keys: vcpkg-
+
+      - uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: 00c5775211f45cd08b37fce0484b4cb940e422ab
+          vcpkgJsonGlob: plugin/vcpkg.json
+          runVcpkgInstall: false
+
+      - name: Configure
+        working-directory: plugin
+        run: cmake --preset release
+
+      - name: Build
+        working-directory: plugin
+        run: cmake --build --preset release
+
+      - name: Package mod
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path package/SKSE/Plugins | Out-Null
+          Copy-Item plugin/build/SkyrimArchipelago.dll package/SKSE/Plugins/
+          Copy-Item plugin/dist/SKSE/Plugins/* package/SKSE/Plugins/
+          Compress-Archive -Path package/* -DestinationPath SkyrimArchipelago-mod.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: skyrim-archipelago-mod
+          path: SkyrimArchipelago-mod.zip
+
+  release:
+    name: Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [apworld, plugin]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            skyrim.apworld
+            SkyrimArchipelago-mod.zip

@@ -1,0 +1,450 @@
+{
+  "game": "Skyrim Special Edition",
+  "cities": {
+    "Whiterun": {
+      "worldspace": "WhiterunWorld",
+      "fr": "Blancherive"
+    },
+    "Solitude": {
+      "worldspace": "SolitudeWorld",
+      "fr": "Solitude"
+    },
+    "Windhelm": {
+      "worldspace": "WindhelmWorld",
+      "fr": "Vendeaume"
+    },
+    "Riften": {
+      "worldspace": "RiftenWorld",
+      "fr": "Faillaise"
+    },
+    "Markarth": {
+      "worldspace": "MarkarthWorld",
+      "fr": "Markarth"
+    }
+  },
+  "goal_quest": "Skyrim.esm|0x046EF1",
+  "items": {
+    "1398341632": {
+      "type": "gate_key",
+      "city": "Whiterun",
+      "fr": "Clé de Blancherive",
+      "name": "Whiterun Gate Key"
+    },
+    "1398341633": {
+      "type": "gate_key",
+      "city": "Solitude",
+      "fr": "Clé de Solitude",
+      "name": "Solitude Gate Key"
+    },
+    "1398341634": {
+      "type": "gate_key",
+      "city": "Windhelm",
+      "fr": "Clé de Vendeaume",
+      "name": "Windhelm Gate Key"
+    },
+    "1398341635": {
+      "type": "gate_key",
+      "city": "Riften",
+      "fr": "Clé de Faillaise",
+      "name": "Riften Gate Key"
+    },
+    "1398341636": {
+      "type": "gate_key",
+      "city": "Markarth",
+      "fr": "Clé de Markarth",
+      "name": "Markarth Gate Key"
+    },
+    "1398341637": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x013E07",
+      "fr": "Mot de pouvoir : Force implacable",
+      "name": "Progressive Unrelenting Force"
+    },
+    "1398341638": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x02F7BA",
+      "fr": "Mot de pouvoir : Impulsion",
+      "name": "Progressive Whirlwind Sprint"
+    },
+    "1398341639": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x03CD34",
+      "fr": "Mot de pouvoir : Ciel dégagé",
+      "name": "Progressive Clear Skies"
+    },
+    "1398341640": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x044250",
+      "fr": "Mot de pouvoir : Brise-Dragon",
+      "name": "Progressive Dragonrend"
+    },
+    "1398341641": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x046B8C",
+      "fr": "Mot de pouvoir : Appel de dragon",
+      "name": "Progressive Call Dragon"
+    },
+    "1398341642": {
+      "type": "perk_point",
+      "fr": "Point d'atout",
+      "name": "Perk Point"
+    },
+    "1398341643": {
+      "type": "dragon_soul",
+      "fr": "Âme de dragon",
+      "name": "Dragon Soul"
+    },
+    "1398341644": {
+      "type": "item",
+      "form": "Skyrim.esm|0x00000F",
+      "count": 100,
+      "fr": "100 pièces d'or",
+      "name": "Gold (100)"
+    },
+    "1398341645": {
+      "type": "item",
+      "form": "Skyrim.esm|0x00000F",
+      "count": 500,
+      "fr": "500 pièces d'or",
+      "name": "Gold (500)"
+    },
+    "1398341646": {
+      "type": "item",
+      "form": "Skyrim.esm|0x03EADE",
+      "count": 1,
+      "fr": "Potion de soins",
+      "name": "Healing Potion"
+    },
+    "1398341647": {
+      "type": "item",
+      "form": "Skyrim.esm|0x039BE6",
+      "count": 1,
+      "fr": "Potion de magie",
+      "name": "Magicka Potion"
+    },
+    "1398341648": {
+      "type": "item",
+      "form": "Skyrim.esm|0x00000A",
+      "count": 5,
+      "fr": "5 crochets",
+      "name": "Lockpick Bundle"
+    },
+    "1398341649": {
+      "type": "item",
+      "form": "Skyrim.esm|0x02E4FF",
+      "count": 1,
+      "fr": "Grande gemme d'âme pleine",
+      "name": "Filled Soul Gem"
+    },
+    "1398341650": {
+      "type": "trap_dragon",
+      "fr": "Piège : attaque de dragon",
+      "name": "Dragon Attack Trap"
+    },
+    "1398341651": {
+      "type": "trap_fine",
+      "percent": 10,
+      "fr": "Piège : amende",
+      "name": "Bounty Trap"
+    },
+    "1398341652": {
+      "type": "item",
+      "form": "Skyrim.esm|0x05ACE4",
+      "count": 40,
+      "fr": "Piège : 40 lingots de fer",
+      "name": "Encumbrance Trap"
+    }
+  },
+  "locations": [
+    {
+      "id": 1398345728,
+      "name": "Unbound",
+      "quest": "Skyrim.esm|0x03372B"
+    },
+    {
+      "id": 1398345729,
+      "name": "Before the Storm",
+      "quest": "Skyrim.esm|0x04E50D"
+    },
+    {
+      "id": 1398345730,
+      "name": "Bleak Falls Barrow",
+      "quest": "Skyrim.esm|0x0D0800"
+    },
+    {
+      "id": 1398345731,
+      "name": "Dragon Rising",
+      "quest": "Skyrim.esm|0x02610C"
+    },
+    {
+      "id": 1398345732,
+      "name": "The Way of the Voice",
+      "quest": "Skyrim.esm|0x0242BA"
+    },
+    {
+      "id": 1398345733,
+      "name": "High Hrothgar - Greybeards' First Lesson",
+      "quest": "Skyrim.esm|0x0242BA"
+    },
+    {
+      "id": 1398345734,
+      "name": "High Hrothgar - Greybeards' Second Lesson",
+      "quest": "Skyrim.esm|0x0242BA"
+    },
+    {
+      "id": 1398345735,
+      "name": "The Horn of Jurgen Windcaller",
+      "quest": "Skyrim.esm|0x0713DC"
+    },
+    {
+      "id": 1398345736,
+      "name": "High Hrothgar - Greybeards' Gift",
+      "quest": "Skyrim.esm|0x0713DC"
+    },
+    {
+      "id": 1398345737,
+      "name": "A Blade in the Dark",
+      "quest": "Skyrim.esm|0x032926"
+    },
+    {
+      "id": 1398345738,
+      "name": "Diplomatic Immunity",
+      "quest": "Skyrim.esm|0x035D5F"
+    },
+    {
+      "id": 1398345739,
+      "name": "A Cornered Rat",
+      "quest": "Skyrim.esm|0x036191"
+    },
+    {
+      "id": 1398345740,
+      "name": "Alduin's Wall",
+      "quest": "Skyrim.esm|0x036192"
+    },
+    {
+      "id": 1398345741,
+      "name": "High Hrothgar - Clear Skies Lesson",
+      "quest": "Skyrim.esm|0x036192"
+    },
+    {
+      "id": 1398345742,
+      "name": "The Throat of the World",
+      "quest": "Skyrim.esm|0x02D515"
+    },
+    {
+      "id": 1398345743,
+      "name": "Elder Knowledge",
+      "quest": "Skyrim.esm|0x02D516"
+    },
+    {
+      "id": 1398345744,
+      "name": "Time-Wound - Elder Scroll Reading",
+      "quest": "Skyrim.esm|0x02D516"
+    },
+    {
+      "id": 1398345745,
+      "name": "Alduin's Bane",
+      "quest": "Skyrim.esm|0x036193"
+    },
+    {
+      "id": 1398345746,
+      "name": "High Hrothgar - Call Dragon Lesson",
+      "quest": "Skyrim.esm|0x036193"
+    },
+    {
+      "id": 1398345747,
+      "name": "The Fallen",
+      "quest": "Skyrim.esm|0x044C56"
+    },
+    {
+      "id": 1398345748,
+      "name": "The World-Eater's Eyrie",
+      "quest": "Skyrim.esm|0x046EF0"
+    },
+    {
+      "id": 1398345749,
+      "name": "Sovngarde",
+      "quest": "Skyrim.esm|0x046EF1"
+    },
+    {
+      "id": 1398345750,
+      "name": "Whiterun - Take Up Arms",
+      "quest": "Skyrim.esm|0x04B2D9"
+    },
+    {
+      "id": 1398345751,
+      "name": "Solitude - Tending the Flames",
+      "quest": "Skyrim.esm|0x053511"
+    },
+    {
+      "id": 1398345752,
+      "name": "Windhelm - The White Phial",
+      "quest": "Skyrim.esm|0x02C258"
+    },
+    {
+      "id": 1398345753,
+      "name": "Riften - A Chance Arrangement",
+      "quest": "Skyrim.esm|0x021556"
+    },
+    {
+      "id": 1398345754,
+      "name": "Markarth - The Forsworn Conspiracy",
+      "quest": "Skyrim.esm|0x018B4B"
+    },
+    {
+      "id": 1398345755,
+      "name": "Bleak Falls Barrow - Word Wall",
+      "quest": "Skyrim.esm|0x0D0800"
+    },
+    {
+      "id": 1398345756,
+      "name": "Dragon Soul 1",
+      "dragon_soul": 1
+    },
+    {
+      "id": 1398345757,
+      "name": "Dragon Soul 2",
+      "dragon_soul": 2
+    },
+    {
+      "id": 1398345758,
+      "name": "Dragon Soul 3",
+      "dragon_soul": 3
+    },
+    {
+      "id": 1398345759,
+      "name": "Dragon Soul 4",
+      "dragon_soul": 4
+    },
+    {
+      "id": 1398345760,
+      "name": "Dragon Soul 5",
+      "dragon_soul": 5
+    },
+    {
+      "id": 1398345761,
+      "name": "Dragon Soul 6",
+      "dragon_soul": 6
+    },
+    {
+      "id": 1398345762,
+      "name": "Dragon Soul 7",
+      "dragon_soul": 7
+    },
+    {
+      "id": 1398345763,
+      "name": "Dragon Soul 8",
+      "dragon_soul": 8
+    },
+    {
+      "id": 1398345764,
+      "name": "Dragon Soul 9",
+      "dragon_soul": 9
+    },
+    {
+      "id": 1398345765,
+      "name": "Dragon Soul 10",
+      "dragon_soul": 10
+    },
+    {
+      "id": 1398345766,
+      "name": "Dragon Soul 11",
+      "dragon_soul": 11
+    },
+    {
+      "id": 1398345767,
+      "name": "Dragon Soul 12",
+      "dragon_soul": 12
+    },
+    {
+      "id": 1398345768,
+      "name": "Dragon Soul 13",
+      "dragon_soul": 13
+    },
+    {
+      "id": 1398345769,
+      "name": "Dragon Soul 14",
+      "dragon_soul": 14
+    },
+    {
+      "id": 1398345770,
+      "name": "Dragon Soul 15",
+      "dragon_soul": 15
+    },
+    {
+      "id": 1398345771,
+      "name": "Dragon Soul 16",
+      "dragon_soul": 16
+    },
+    {
+      "id": 1398345772,
+      "name": "Dragon Soul 17",
+      "dragon_soul": 17
+    },
+    {
+      "id": 1398345773,
+      "name": "Dragon Soul 18",
+      "dragon_soul": 18
+    },
+    {
+      "id": 1398345774,
+      "name": "Dragon Soul 19",
+      "dragon_soul": 19
+    },
+    {
+      "id": 1398345775,
+      "name": "Dragon Soul 20",
+      "dragon_soul": 20
+    },
+    {
+      "id": 1398345776,
+      "name": "Dragon Soul 21",
+      "dragon_soul": 21
+    },
+    {
+      "id": 1398345777,
+      "name": "Dragon Soul 22",
+      "dragon_soul": 22
+    },
+    {
+      "id": 1398345778,
+      "name": "Dragon Soul 23",
+      "dragon_soul": 23
+    },
+    {
+      "id": 1398345779,
+      "name": "Dragon Soul 24",
+      "dragon_soul": 24
+    },
+    {
+      "id": 1398345780,
+      "name": "Dragon Soul 25",
+      "dragon_soul": 25
+    },
+    {
+      "id": 1398345781,
+      "name": "Dragon Soul 26",
+      "dragon_soul": 26
+    },
+    {
+      "id": 1398345782,
+      "name": "Dragon Soul 27",
+      "dragon_soul": 27
+    },
+    {
+      "id": 1398345783,
+      "name": "Dragon Soul 28",
+      "dragon_soul": 28
+    },
+    {
+      "id": 1398345784,
+      "name": "Dragon Soul 29",
+      "dragon_soul": 29
+    },
+    {
+      "id": 1398345785,
+      "name": "Dragon Soul 30",
+      "dragon_soul": 30
+    }
+  ]
+}
