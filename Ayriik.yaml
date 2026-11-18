@@ -12,6 +12,8 @@ Skyrim Special Edition:
   # Lignes de quêtes en plus (chacune rallonge la partie). Enlève celles que tu ne veux pas.
   #   Companions, College of Winterhold, Thieves Guild, Dark Brotherhood, Daedric Quests
   quest_lines: []
+  # Murs de mots : les 20 cris du jeu sont mélangés et chaque mur devient un check
+  word_walls: false
   # Nombre d'âmes de dragon qui envoient un check (0 à 30)
   dragon_soul_checks: 10
   # Commencer avec la clé de Blancherive (conseillé)

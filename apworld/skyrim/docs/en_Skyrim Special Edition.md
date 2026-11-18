@@ -8,6 +8,8 @@
   are no longer learned from word walls or the Greybeards: their words are items, received in order.
 - Checks are sent by completing main quest steps, one quest per walled city, the Bleak Falls Barrow word wall,
   and absorbing dragon souls.
+- With the `word_walls` option, all 20 base-game shouts are shuffled and every word wall becomes a check: the k-th
+  word the game teaches you for a shout sends "Word Wall - <Shout> #k", and the word is taken back.
 - Optional quest lines (`quest_lines` option) add more checks: Companions, College of Winterhold, Thieves Guild,
   Dark Brotherhood and Daedric quests.
 

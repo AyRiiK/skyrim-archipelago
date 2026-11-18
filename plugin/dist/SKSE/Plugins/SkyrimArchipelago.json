@@ -152,8 +152,266 @@
       "count": 40,
       "fr": "Piège : 40 lingots de fer",
       "name": "Encumbrance Trap"
+    },
+    "1398341653": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x05FC77",
+      "fr": "",
+      "name": "Progressive Animal Allegiance"
+    },
+    "1398341654": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x07097B",
+      "fr": "",
+      "name": "Progressive Aura Whisper"
+    },
+    "1398341655": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x032920",
+      "fr": "",
+      "name": "Progressive Become Ethereal"
+    },
+    "1398341656": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x070981",
+      "fr": "",
+      "name": "Progressive Disarm"
+    },
+    "1398341657": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x02395A",
+      "fr": "",
+      "name": "Progressive Dismay"
+    },
+    "1398341658": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x032921",
+      "fr": "",
+      "name": "Progressive Elemental Fury"
+    },
+    "1398341659": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x03F9EA",
+      "fr": "",
+      "name": "Progressive Fire Breath"
+    },
+    "1398341660": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x05D16B",
+      "fr": "",
+      "name": "Progressive Frost Breath"
+    },
+    "1398341661": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x070980",
+      "fr": "",
+      "name": "Progressive Ice Form"
+    },
+    "1398341662": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x07097E",
+      "fr": "",
+      "name": "Progressive Kyne's Peace"
+    },
+    "1398341663": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x07097C",
+      "fr": "",
+      "name": "Progressive Marked for Death"
+    },
+    "1398341664": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x048AC9",
+      "fr": "",
+      "name": "Progressive Slow Time"
+    },
+    "1398341665": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x07097D",
+      "fr": "",
+      "name": "Progressive Storm Call"
+    },
+    "1398341666": {
+      "type": "shout",
+      "shout": "Skyrim.esm|0x07097F",
+      "fr": "",
+      "name": "Progressive Throw Voice"
     }
   },
+  "shouts": [
+    {
+      "name": "Unrelenting Force",
+      "form": "Skyrim.esm|0x013E07",
+      "always": true,
+      "walls": []
+    },
+    {
+      "name": "Whirlwind Sprint",
+      "form": "Skyrim.esm|0x02F7BA",
+      "always": true,
+      "walls": [
+        1398345877,
+        1398345878,
+        1398345879
+      ]
+    },
+    {
+      "name": "Clear Skies",
+      "form": "Skyrim.esm|0x03CD34",
+      "always": true,
+      "walls": []
+    },
+    {
+      "name": "Dragonrend",
+      "form": "Skyrim.esm|0x044250",
+      "always": true,
+      "walls": []
+    },
+    {
+      "name": "Call Dragon",
+      "form": "Skyrim.esm|0x046B8C",
+      "always": true,
+      "walls": []
+    },
+    {
+      "name": "Animal Allegiance",
+      "form": "Skyrim.esm|0x05FC77",
+      "always": false,
+      "walls": [
+        1398345837,
+        1398345838,
+        1398345839
+      ]
+    },
+    {
+      "name": "Aura Whisper",
+      "form": "Skyrim.esm|0x07097B",
+      "always": false,
+      "walls": [
+        1398345840,
+        1398345841,
+        1398345842
+      ]
+    },
+    {
+      "name": "Become Ethereal",
+      "form": "Skyrim.esm|0x032920",
+      "always": false,
+      "walls": [
+        1398345843,
+        1398345844,
+        1398345845
+      ]
+    },
+    {
+      "name": "Disarm",
+      "form": "Skyrim.esm|0x070981",
+      "always": false,
+      "walls": [
+        1398345846,
+        1398345847,
+        1398345848
+      ]
+    },
+    {
+      "name": "Dismay",
+      "form": "Skyrim.esm|0x02395A",
+      "always": false,
+      "walls": [
+        1398345849,
+        1398345850,
+        1398345851
+      ]
+    },
+    {
+      "name": "Elemental Fury",
+      "form": "Skyrim.esm|0x032921",
+      "always": false,
+      "walls": [
+        1398345852,
+        1398345853,
+        1398345854
+      ]
+    },
+    {
+      "name": "Fire Breath",
+      "form": "Skyrim.esm|0x03F9EA",
+      "always": false,
+      "walls": [
+        1398345855,
+        1398345856,
+        1398345857
+      ]
+    },
+    {
+      "name": "Frost Breath",
+      "form": "Skyrim.esm|0x05D16B",
+      "always": false,
+      "walls": [
+        1398345858,
+        1398345859,
+        1398345860
+      ]
+    },
+    {
+      "name": "Ice Form",
+      "form": "Skyrim.esm|0x070980",
+      "always": false,
+      "walls": [
+        1398345861,
+        1398345862,
+        1398345863
+      ]
+    },
+    {
+      "name": "Kyne's Peace",
+      "form": "Skyrim.esm|0x07097E",
+      "always": false,
+      "walls": [
+        1398345864,
+        1398345865,
+        1398345866
+      ]
+    },
+    {
+      "name": "Marked for Death",
+      "form": "Skyrim.esm|0x07097C",
+      "always": false,
+      "walls": [
+        1398345867,
+        1398345868,
+        1398345869
+      ]
+    },
+    {
+      "name": "Slow Time",
+      "form": "Skyrim.esm|0x048AC9",
+      "always": false,
+      "walls": [
+        1398345870,
+        1398345871,
+        1398345872
+      ]
+    },
+    {
+      "name": "Storm Call",
+      "form": "Skyrim.esm|0x07097D",
+      "always": false,
+      "walls": [
+        1398345873,
+        1398345874,
+        1398345875
+      ]
+    },
+    {
+      "name": "Throw Voice",
+      "form": "Skyrim.esm|0x07097F",
+      "always": false,
+      "walls": [
+        1398345876
+      ]
+    }
+  ],
   "locations": [
     {
       "id": 1398345728,

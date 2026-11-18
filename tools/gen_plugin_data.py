@@ -160,6 +160,21 @@ SHOUTS = {
     "Clear Skies": (0x03CD34, "Ciel dégagé"),
     "Dragonrend": (0x044250, "Brise-Dragon"),
     "Call Dragon": (0x046B8C, "Appel de dragon"),
+    # Shuffled with the word_walls option. The plugin shows the in-game name.
+    "Animal Allegiance": (0x05FC77, ""),
+    "Aura Whisper": (0x07097B, ""),
+    "Become Ethereal": (0x032920, ""),
+    "Disarm": (0x070981, ""),
+    "Dismay": (0x02395A, ""),
+    "Elemental Fury": (0x032921, ""),
+    "Fire Breath": (0x03F9EA, ""),
+    "Frost Breath": (0x05D16B, ""),
+    "Ice Form": (0x070980, ""),
+    "Kyne's Peace": (0x07097E, ""),
+    "Marked for Death": (0x07097C, ""),
+    "Slow Time": (0x048AC9, ""),
+    "Storm Call": (0x07097D, ""),
+    "Throw Voice": (0x07097F, ""),
 }
 
 GOLD = 0x00000F
@@ -187,7 +202,7 @@ def main() -> None:
         elif name.startswith("Progressive "):
             shout = name.removeprefix("Progressive ")
             fid, fr = SHOUTS[shout]
-            entry = {"type": "shout", "shout": form(fid), "fr": f"Mot de pouvoir : {fr}"}
+            entry = {"type": "shout", "shout": form(fid), "fr": f"Mot de pouvoir : {fr}" if fr else ""}
         else:
             entry = dict(ITEMS[name])
         entry["name"] = name
@@ -195,6 +210,8 @@ def main() -> None:
 
     locations = []
     for name, loc_id in data.LOCATION_TABLE.items():
+        if name.startswith("Word Wall - "):
+            continue  # sent by the shout tracking, see "shouts" below
         if name.startswith("Dragon Soul "):
             locations.append({"id": loc_id, "name": name, "dragon_soul": int(name.split()[-1])})
         else:
@@ -204,6 +221,18 @@ def main() -> None:
         "game": data.GAME_NAME,
         "cities": {c: {"worldspace": ws, "fr": fr} for c, (ws, fr) in CITIES.items()},
         "items": items,
+        # Shouts whose words only come from Archipelago. "always": shuffled in
+        # every game (main quest shouts); otherwise only with word_walls.
+        # "walls": the "Word Wall - <Shout> #k" locations, in order.
+        "shouts": [
+            {
+                "name": shout,
+                "form": form(SHOUTS[shout][0]),
+                "always": shout in data.SHOUTS,
+                "walls": [data.LOCATION_TABLE[n] for n in data.WORD_WALL_LOCATIONS.get(shout, [])],
+            }
+            for shout in [*data.SHOUTS, *data.EXTRA_SHOUTS]
+        ],
         "locations": locations,
     }
     path = ROOT / "plugin" / "dist" / "SKSE" / "Plugins" / "SkyrimArchipelago.json"

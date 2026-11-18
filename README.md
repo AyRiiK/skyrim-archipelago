@@ -10,6 +10,7 @@ Intégration de **The Elder Scrolls V: Skyrim Special Edition** (Steam, version 
 - Les mots des cris de la quête principale (Force implacable, Impulsion, Ciel dégagé, Brise-Dragon, Appel de dragon) viennent du multiworld.
 - Finir des étapes de la quête principale, une quête par grande ville et absorber des âmes de dragon envoie des objets aux autres joueurs.
 - Lignes de quêtes optionnelles (option `quest_lines`) : Compagnons, Collège de Fortdhiver, Guilde des voleurs, Confrérie noire, quêtes daedriques.
+- Murs de mots (option `word_walls`) : les 20 cris du jeu de base sont mélangés et chaque mur de mots devient un check.
 - Objectif : vaincre Alduin, absorber X âmes de dragon, finir les lignes de quêtes choisies, ou Alduin + les lignes.
 
 ## Contenu du dépôt
@@ -48,7 +49,7 @@ Lance le jeu via SKSE. Le journal du plugin est dans `Documents/My Games/Skyrim 
 
 ## Limites connues (v0.1)
 
-- Les mots de pouvoir appris normalement (murs de mots, Grises-Barbes) ne sont pas encore bloqués.
+- Les mots de pouvoir appris normalement (murs de mots, Grises-Barbes) sont repris par le mod : seuls ceux reçus d'Archipelago restent.
 - Le piège « attaque de dragon » n'est pas encore implémenté.
 - DeathLink : géré (option `death_link` du YAML) — à tester.
 - Certaines correspondances (quête de la Corne de Jurgen, potion de magie) sont à confirmer avec le journal du plugin.

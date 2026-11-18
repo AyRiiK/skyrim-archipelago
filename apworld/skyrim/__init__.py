@@ -12,7 +12,7 @@ from worlds.generic.Rules import set_rule
 from . import data
 from .data import (CITY_KEYS, CITY_QUESTS, GAME_NAME, ITEM_TABLE, LOCATION_TABLE, MAIN_QUEST, QUEST_LINES, SHOUTS,
                    WORD_WALLS, WORDS_PER_SHOUT, Req, dragon_soul_location, progressive_shout,
-                   quest_line_requirements)
+                   quest_line_requirements, EXTRA_SHOUTS, WORD_WALL_LOCATIONS, word_wall_requirements)
 from .options import SkyrimOptions, option_groups
 
 _CLASSIFICATIONS = {
@@ -84,7 +84,7 @@ class SkyrimWorld(World):
 
     item_name_groups = {
         "City Keys": set(CITY_KEYS.values()),
-        "Shouts": {progressive_shout(s) for s in SHOUTS},
+        "Shouts": {progressive_shout(s) for s in SHOUTS + EXTRA_SHOUTS},
         "Traps": set(data.TRAP_ITEMS),
     }
     location_name_groups = {
@@ -92,6 +92,7 @@ class SkyrimWorld(World):
         "City Quests": {s.name for s in CITY_QUESTS},
         "Dragon Souls": {dragon_soul_location(n) for n in range(1, data.MAX_DRAGON_SOULS + 1)},
         **{line: {s.name for s in QUEST_LINES[line].steps} for line in QUEST_LINES},
+        "Word Walls": {n for names in WORD_WALL_LOCATIONS.values() for n in names},
     }
 
     # ------------------------------------------------------------------ #
@@ -122,6 +123,10 @@ class SkyrimWorld(World):
         for line in sorted(self.options.quest_lines.value):
             for step in QUEST_LINES[line].steps:
                 add(step.region, step.name)
+        if self.options.word_walls:
+            for names in WORD_WALL_LOCATIONS.values():
+                for name in names:
+                    add("Skyrim", name)
 
         goal = SkyrimLocation(self.player, GOAL_EVENT, None, skyrim)
         goal.place_locked_item(SkyrimItem(VICTORY_ITEM, ItemClassification.progression, None, self.player))
@@ -161,6 +166,14 @@ class SkyrimWorld(World):
             pool.append(self.create_item(name))
             pool += [self._create_with(name, ItemClassification.useful) for _ in range(WORDS_PER_SHOUT - 1)]
 
+        if self.options.word_walls:
+            for shout in EXTRA_SHOUTS:
+                name = progressive_shout(shout)
+                # Fire Breath is needed on the Throat of the World; the rest is useful.
+                first = ItemClassification.progression if shout == "Fire Breath" else ItemClassification.useful
+                pool.append(self._create_with(name, first))
+                pool += [self._create_with(name, ItemClassification.useful) for _ in range(WORDS_PER_SHOUT - 1)]
+
         total = len(self.multiworld.get_unfilled_locations(self.player))
         if len(pool) > total:
             raise OptionError(f"{self.player_name}: not enough locations ({total}) for the required items "
@@ -173,8 +186,11 @@ class SkyrimWorld(World):
         self.multiworld.itempool += pool
 
     # ------------------------------------------------------------------ #
+    def _mq(self) -> dict[str, list[Req]]:
+        return data.main_quest_requirements(word_walls=bool(self.options.word_walls))
+
     def set_rules(self) -> None:
-        mq = data.main_quest_requirements()
+        mq = self._mq()
         for step in MAIN_QUEST:
             set_rule(self.get_location(step.name), _has_all(mq[step.name], self.player))
 
@@ -186,6 +202,15 @@ class SkyrimWorld(World):
             reqs = quest_line_requirements(line)
             for step in QUEST_LINES[line].steps:
                 set_rule(self.get_location(step.name), _has_all(reqs[step.name], self.player))
+
+        if self.options.word_walls:
+            walls = word_wall_requirements()
+            for shout, names in WORD_WALL_LOCATIONS.items():
+                needed: dict[str, int] = {}
+                for name, reqs in zip(names, walls[shout]):
+                    for item, count in reqs:
+                        needed[item] = max(needed.get(item, 0), count)
+                    set_rule(self.get_location(name), _has_all(list(needed.items()), self.player))
 
         goal_reqs: dict[str, int] = {}
         for item, count in self._goal_requirements():
@@ -207,7 +232,7 @@ class SkyrimWorld(World):
         return names
 
     def _goal_requirements(self) -> list[Req]:
-        mq = data.main_quest_requirements()
+        mq = self._mq()
         reqs: list[Req] = []
         if self.options.goal == self.options.goal.option_dragon_souls:
             reqs += mq["Dragon Rising"]
@@ -226,6 +251,7 @@ class SkyrimWorld(World):
             "goal_souls": self.options.dragon_soul_checks.value
             if self.options.goal == self.options.goal.option_dragon_souls else 0,
             "quest_lines": sorted(self.options.quest_lines.value),
+            "word_walls": int(bool(self.options.word_walls)),
             **self.options.as_dict(
                 "goal", "dragon_soul_checks", "start_with_whiterun_key", "auto_unlock_shouts", "death_link"
             ),

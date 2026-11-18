@@ -1,4 +1,4 @@
-from BaseClasses import CollectionState
+from BaseClasses import CollectionState, ItemClassification
 
 from . import SkyrimTestBase
 
@@ -70,3 +70,36 @@ class TestAllQuestLines(SkyrimTestBase):
 
 class TestQuestLinesGoalOnly(SkyrimTestBase):
     options = {"quest_lines": ["College of Winterhold"], "goal": "quest_lines"}
+
+
+class TestWordWalls(SkyrimTestBase):
+    options = {"word_walls": True, "quest_lines": ["Companions"]}
+
+    def test_throat_needs_fire_breath(self) -> None:
+        self.assertIn("Progressive Fire Breath", {i.name for i in self.multiworld.itempool if i.advancement})
+        state = CollectionState(self.multiworld)
+        for item in self.multiworld.itempool:
+            if item.player == self.player and item.advancement and item.name != "Progressive Fire Breath":
+                state.collect(item, True)
+        self.assertFalse(state.can_reach_location("The Throat of the World", self.player))
+        state.collect(self.world.create_item("Progressive Fire Breath"), True)
+        state.collect(self.world._create_with("Progressive Fire Breath", ItemClassification.progression), True)
+        self.assertTrue(state.can_reach_location("The Throat of the World", self.player))
+
+    def test_free_walls_reachable(self) -> None:
+        self.assertTrue(self.can_reach_location("Word Wall - Aura Whisper #3"))
+        self.assertTrue(self.can_reach_location("Word Wall - Throw Voice #1"))
+        self.assertFalse(self.can_reach_location("Word Wall - Storm Call #3"))
+
+    def test_slot_data(self) -> None:
+        self.assertEqual(self.world.fill_slot_data()["word_walls"], 1)
+
+
+class TestWordWallsEverything(SkyrimTestBase):
+    options = {
+        "word_walls": True,
+        "quest_lines": ["Companions", "College of Winterhold", "Thieves Guild", "Dark Brotherhood", "Daedric Quests"],
+        "goal": "alduin_and_quest_lines",
+        "dragon_soul_checks": 30,
+        "perk_points": 20,
+    }

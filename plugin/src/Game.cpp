@@ -6,7 +6,7 @@
 namespace
 {
 	constexpr auto GAME_NAME = "Skyrim Special Edition";
-	constexpr std::uint32_t SAVE_VERSION = 1;
+	constexpr std::uint32_t SAVE_VERSION = 2;
 	constexpr std::uint32_t RECORD_STATE = 'STAT';
 	constexpr RE::FormID    XMARKER = 0x0000003B;
 	constexpr int           CLIENT_STATUS_GOAL = 30;
@@ -34,6 +34,16 @@ namespace
 		int           dragonSoul{ 0 };
 	};
 
+	struct ShoutDef
+	{
+		std::string               name;
+		RE::TESShout*             shout{ nullptr };
+		bool                      always{ false };  // shuffled even without word_walls
+		std::vector<std::int64_t> walls;            // "Word Wall - <Shout> #k" locations
+	};
+
+	std::vector<ShoutDef> g_shouts;
+
 	struct CityDef
 	{
 		std::string         name;
@@ -58,6 +68,8 @@ namespace
 		std::int32_t  lastSouls{ -1 };
 		std::uint32_t cityMask{ 0 };
 		RE::FormID    marker{ 0 };
+		// Words the game taught outside Archipelago, per shout (word wall checks).
+		std::map<RE::FormID, std::uint32_t> wallEvents;
 	} g_save;
 
 	// ------------------------------------------------------------------ //
@@ -77,6 +89,8 @@ namespace
 		std::uint32_t                    goalSouls{ 0 };
 		int                              dragonSoulChecks{ 0 };
 		bool                             autoUnlockShouts{ true };
+		bool                             wordWalls{ false };
+		std::map<RE::TESShout*, int>     apShoutWords;
 		bool                             deathLink{ false };
 		bool                             wasDead{ false };
 		bool                             ignoreNextDeath{ false };
@@ -200,6 +214,7 @@ namespace
 			}
 			g_session.dragonSoulChecks = slotData.value("dragon_soul_checks", 0);
 			g_session.autoUnlockShouts = slotData.value("auto_unlock_shouts", 1) != 0;
+			g_session.wordWalls = slotData.value("word_walls", 0) != 0;
 			g_session.deathLink = slotData.value("death_link", 0) != 0;
 			if (g_session.deathLink) {
 				Client::Get().Send({ { "cmd", "ConnectUpdate" }, { "tags", json::array({ "AP", "DeathLink" }) } });
@@ -376,6 +391,7 @@ namespace
 			}
 		}
 		g_save.cityMask = cityMask;
+		g_session.apShoutWords = shoutWords;
 		for (const auto& [shout, words] : shoutWords) {
 			EnsureShout(shout, words);
 		}
@@ -398,13 +414,84 @@ namespace
 				const auto sender = entry.value("player", -1);
 				// Slot 0 is the server itself (starting inventory, /send).
 				std::string from = (sender == g_session.slot || sender == 0) ? "" : " (de " + PlayerName(sender) + ")";
-				Game::Notify("Reçu : " + it->second.fr + from);
+				std::string label = it->second.fr;
+				if (label.empty() && it->second.shout) {
+					label = std::string("Mot de pouvoir : ") + it->second.shout->GetName();
+				}
+				Game::Notify("Reçu : " + label + from);
 			}
 		}
 		if (newCount > 5) {
 			Game::Notify(fmt::format("Archipelago : {} objets reçus", newCount));
 		}
 		g_save.itemsApplied = total;
+	}
+
+	// ------------------------------------------------------------------ //
+	// Shout words: only Archipelago may teach them
+	// ------------------------------------------------------------------ //
+	void TrackShoutWords()
+	{
+		constexpr std::uint32_t KNOWN = RE::TESForm::RecordFlags::kKnown;
+		constexpr std::uint32_t UNLOCKED = RE::TESForm::RecordFlags::kUnlocked;
+
+		json locations = json::array();
+		for (const auto& def : g_shouts) {
+			if (!def.shout || !(def.always || g_session.wordWalls)) {
+				continue;
+			}
+			const auto it = g_session.apShoutWords.find(def.shout);
+			const int  granted = it != g_session.apShoutWords.end() ? it->second : 0;
+
+			for (int i = granted; i < 3; ++i) {
+				auto* word = def.shout->variations[i].word;
+				if (!word || !(word->formFlags & KNOWN)) {
+					continue;
+				}
+				// The game taught this word (word wall, Greybeards, quest): take it back.
+				const bool wasUnlocked = (word->formFlags & UNLOCKED) != 0;
+				word->formFlags &= ~UNLOCKED;
+				word->SetPlayerKnows(false);  // engine call: also records the change in the save
+				word->formFlags &= ~KNOWN;
+				if (wasUnlocked) {
+					// Give back the dragon soul spent on it.
+					Player()->AsActorValueOwner()->ModBaseActorValue(RE::ActorValue::kDragonSouls, 1.0f);
+					if (g_save.lastSouls >= 0) {
+						++g_save.lastSouls;
+					}
+				}
+				logger::info("Took back word {} of {} (taught outside Archipelago)", i + 1, def.name);
+
+				if (g_session.wordWalls && !def.walls.empty()) {
+					const auto n = ++g_save.wallEvents[def.shout->GetFormID()];
+					if (n <= def.walls.size()) {
+						const auto id = def.walls[n - 1];
+						if (!g_session.checked.contains(id)) {
+							locations.push_back(id);
+							g_session.checked.insert(id);
+						}
+						Game::Notify(std::string("Mur de mots : ") + def.shout->GetName() + " #" + std::to_string(n) +
+						             " envoyé à Archipelago.");
+					}
+				} else {
+					Game::Notify(std::string("Ce mot de pouvoir doit venir d'Archipelago (") + def.shout->GetName() + ").");
+				}
+			}
+
+			// Walls stop teaching once every word is known: send what's left.
+			if (g_session.wordWalls && granted >= 3) {
+				for (const auto id : def.walls) {
+					if (!g_session.checked.contains(id)) {
+						locations.push_back(id);
+						g_session.checked.insert(id);
+						logger::info("Auto-sent word wall {} of {} (all words received)", id, def.name);
+					}
+				}
+			}
+		}
+		if (!locations.empty()) {
+			Client::Get().Send({ { "cmd", "LocationChecks" }, { "locations", locations } });
+		}
 	}
 
 	// ------------------------------------------------------------------ //
@@ -608,6 +695,24 @@ namespace Game
 			g_items[std::stoll(id)] = std::move(def);
 		}
 
+		for (const auto& entry : data.value("shouts", json::array())) {
+			ShoutDef def;
+			def.name = entry.value("name", std::string{});
+			def.always = entry.value("always", false);
+			for (const auto& id : entry.value("walls", json::array())) {
+				def.walls.push_back(id.get<std::int64_t>());
+			}
+			auto* form = LookupForm(entry.value("form", std::string{}));
+			def.shout = form ? form->As<RE::TESShout>() : nullptr;
+			logger::info("Shout '{}' -> {} ({} walls)", def.name, FormInfo(def.shout), def.walls.size());
+			if (def.shout) {
+				for (int i = 0; i < 3; ++i) {
+					logger::info("    word {}: {}", i + 1, FormInfo(def.shout->variations[i].word));
+				}
+			}
+			g_shouts.push_back(std::move(def));
+		}
+
 		for (const auto& loc : data["locations"]) {
 			LocationDef def;
 			def.id = loc.value("id", std::int64_t{ 0 });
@@ -672,6 +777,7 @@ namespace Game
 		if (IsBound()) {
 			HandleDeathLink();
 			ApplyItems();
+			TrackShoutWords();
 			CheckLocations();
 		}
 
@@ -693,6 +799,12 @@ namespace Game
 		a_intfc->WriteRecordData(&g_save.lastSouls, sizeof(g_save.lastSouls));
 		a_intfc->WriteRecordData(&g_save.cityMask, sizeof(g_save.cityMask));
 		a_intfc->WriteRecordData(&g_save.marker, sizeof(g_save.marker));
+		const auto walls = static_cast<std::uint32_t>(g_save.wallEvents.size());
+		a_intfc->WriteRecordData(&walls, sizeof(walls));
+		for (const auto& [shout, count] : g_save.wallEvents) {
+			a_intfc->WriteRecordData(&shout, sizeof(shout));
+			a_intfc->WriteRecordData(&count, sizeof(count));
+		}
 	}
 
 	void OnLoad(SKSE::SerializationInterface* a_intfc)
@@ -700,7 +812,7 @@ namespace Game
 		g_save = {};
 		std::uint32_t type, version, length;
 		while (a_intfc->GetNextRecordInfo(type, version, length)) {
-			if (type != RECORD_STATE || version != SAVE_VERSION) {
+			if (type != RECORD_STATE || version < 1 || version > SAVE_VERSION) {
 				continue;
 			}
 			g_save.seed = ReadString(a_intfc);
@@ -714,6 +826,17 @@ namespace Game
 			RE::FormID resolved = 0;
 			if (marker && a_intfc->ResolveFormID(marker, resolved)) {
 				g_save.marker = resolved;
+			}
+			if (version >= 2) {
+				std::uint32_t walls = 0;
+				a_intfc->ReadRecordData(&walls, sizeof(walls));
+				for (std::uint32_t i = 0; i < walls; ++i) {
+					RE::FormID    shout = 0;
+					std::uint32_t count = 0;
+					a_intfc->ReadRecordData(&shout, sizeof(shout));
+					a_intfc->ReadRecordData(&count, sizeof(count));
+					g_save.wallEvents[shout] = count;
+				}
 			}
 		}
 		logger::info("Loaded save state: seed='{}' slot='{}' items={} souls={}", g_save.seed, g_save.slot,

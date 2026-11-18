@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from Options import Choice, DeathLink, DefaultOnToggle, OptionGroup, OptionSet, PerGameCommonOptions, Range
+from Options import Choice, DeathLink, DefaultOnToggle, OptionGroup, OptionSet, PerGameCommonOptions, Range, Toggle
 
 from .data import MAX_DRAGON_SOULS, QUEST_LINES
 
@@ -70,6 +70,16 @@ class TrapChance(Range):
     default = 15
 
 
+class WordWalls(Toggle):
+    """Every word wall becomes a check, and all 20 shouts of the base game are
+    shuffled into the item pool (not only the main quest ones).
+
+    Learning a word at a wall sends "Word Wall - <Shout> #1", "#2"... and the
+    word is taken back: shout words only come from Archipelago.
+    """
+    display_name = "Word Walls"
+
+
 class AutoUnlockShouts(DefaultOnToggle):
     """Received shout words are unlocked immediately, without spending
     dragon souls. If off, you still need dragon souls to unlock them."""
@@ -80,6 +90,7 @@ class AutoUnlockShouts(DefaultOnToggle):
 class SkyrimOptions(PerGameCommonOptions):
     goal: Goal
     quest_lines: QuestLines
+    word_walls: WordWalls
     dragon_soul_checks: DragonSoulChecks
     start_with_whiterun_key: StartWithWhiterunKey
     perk_points: PerkPoints
@@ -90,7 +101,7 @@ class SkyrimOptions(PerGameCommonOptions):
 
 option_groups = [
     OptionGroup("Goal", [Goal, DragonSoulChecks]),
-    OptionGroup("Game Length", [QuestLines]),
+    OptionGroup("Game Length", [QuestLines, WordWalls]),
     OptionGroup("Item Pool", [StartWithWhiterunKey, PerkPoints, TrapChance]),
     OptionGroup("Gameplay", [AutoUnlockShouts, DeathLink]),
 ]

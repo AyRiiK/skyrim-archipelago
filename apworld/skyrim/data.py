@@ -64,6 +64,26 @@ _items += [
     ("Encumbrance Trap", "trap"),
 ]
 
+# Shouts that are only shuffled with the word_walls option. Appended after the
+# original items so that existing item IDs never change.
+EXTRA_SHOUTS = [
+    "Animal Allegiance",
+    "Aura Whisper",
+    "Become Ethereal",
+    "Disarm",
+    "Dismay",
+    "Elemental Fury",
+    "Fire Breath",
+    "Frost Breath",
+    "Ice Form",
+    "Kyne's Peace",
+    "Marked for Death",
+    "Slow Time",
+    "Storm Call",
+    "Throw Voice",
+]
+_items += [(progressive_shout(s), "useful") for s in EXTRA_SHOUTS]
+
 ITEM_TABLE: dict[str, ItemData] = {
     name: ItemData(ITEM_BASE_ID + i, kind) for i, (name, kind) in enumerate(_items)
 }
@@ -111,11 +131,11 @@ MAIN_QUEST: list[QuestStep] = [
     QuestStep("Bleak Falls Barrow", "Whiterun"),
     QuestStep("Dragon Rising", "Whiterun"),
     # The Greybeards ask you to demonstrate the Thu'um.
-    QuestStep("The Way of the Voice", "Skyrim", (has_shout("Unrelenting Force"),)),
+    # Borri teaches Wuld during the quest and you must sprint through a gate.
+    QuestStep("The Way of the Voice", "Skyrim", (has_shout("Unrelenting Force"), has_shout("Whirlwind Sprint"))),
     QuestStep("High Hrothgar - Greybeards' First Lesson", "Skyrim"),
     QuestStep("High Hrothgar - Greybeards' Second Lesson", "Skyrim"),
-    # VERIFY: Ustengrav's timed gates are designed around Whirlwind Sprint.
-    QuestStep("The Horn of Jurgen Windcaller", "Skyrim", (has_shout("Whirlwind Sprint"),)),
+    QuestStep("The Horn of Jurgen Windcaller", "Skyrim"),
     QuestStep("High Hrothgar - Greybeards' Gift", "Skyrim"),
     QuestStep("A Blade in the Dark", "Skyrim"),
     QuestStep("Diplomatic Immunity", "Solitude"),
@@ -256,6 +276,61 @@ def quest_line_requirements(line_name: str) -> dict[str, list[Req]]:
     return result
 
 
+# --------------------------------------------------------------------------- #
+# Word walls (YAML option "word_walls")
+# --------------------------------------------------------------------------- #
+# Most word walls teach the next word of their shout you don't know yet, so a
+# check can't be tied to one wall. Instead, "Word Wall - <Shout> #k" is sent
+# the k-th time the game teaches you a word of that shout (the word is then
+# taken back: only Archipelago gives shout words).
+#
+# Each shout lists its walls from easiest to hardest to reach, as the items
+# needed to reach them. Location #k needs the first k walls.
+
+def _wall(*reqs: Req) -> list[Req]:
+    return list(reqs)
+
+
+def word_wall_requirements() -> dict[str, list[list[Req]]]:
+    mq = main_quest_requirements(word_walls=True)
+    lines = {name: quest_line_requirements(name) for name in QUEST_LINES}
+    free: list[Req] = []
+    return {
+        "Animal Allegiance": [free, free, lines["Companions"]["Companions - Glory of the Dead"]],  # Ysgramor's Tomb
+        "Aura Whisper": [free, free, free],
+        "Become Ethereal": [free, free, mq["The Horn of Jurgen Windcaller"]],  # Ustengrav
+        "Disarm": [free, free, lines["Thieves Guild"]["Thieves Guild - Speaking With Silence"]],  # Snow Veil
+        "Dismay": [free, free, free],
+        "Elemental Fury": [free, free, free],
+        # Dustman's Cairn (Proving Honor), then Paarthurnax teaches Yol on the Throat of the World.
+        "Fire Breath": [free, lines["Companions"]["Companions - Proving Honor"],
+                        mq["High Hrothgar - Clear Skies Lesson"] + [has_shout("Clear Skies")]],
+        "Frost Breath": [free, free, free],
+        "Ice Form": [free, free, lines["College of Winterhold"]["College - Under Saarthal"]],
+        "Kyne's Peace": [free, free, free],
+        "Marked for Death": [free, free, lines["Dark Brotherhood"]["Dark Brotherhood - Sanctuary"]],
+        # Labyrinthian (The Staff of Magnus), Korvanjund (civil war, from Solitude).
+        "Slow Time": [free, lines["College of Winterhold"]["College - The Staff of Magnus"], [key_for("Solitude")]],
+        "Storm Call": [free, free, mq["The World-Eater's Eyrie"]],  # Skuldafn
+        "Throw Voice": [free],
+        # Borri teaches Wuld during The Way of the Voice (after you shout Fus).
+        "Whirlwind Sprint": [free, free, mq["Dragon Rising"] + [has_shout("Unrelenting Force")]],
+    }
+
+
+WORD_WALL_SHOUTS = [*EXTRA_SHOUTS, "Whirlwind Sprint"]
+_WALL_COUNTS = {"Throw Voice": 1}
+
+
+def word_wall_location(shout: str, k: int) -> str:
+    return f"Word Wall - {shout} #{k}"
+
+
+WORD_WALL_LOCATIONS: dict[str, list[str]] = {
+    shout: [word_wall_location(shout, k) for k in range(1, _WALL_COUNTS.get(shout, 3) + 1)]
+    for shout in WORD_WALL_SHOUTS
+}
+
 _locations: list[str] = (
     [s.name for s in MAIN_QUEST]
     + [s.name for s in CITY_QUESTS]
@@ -263,6 +338,7 @@ _locations: list[str] = (
     + [dragon_soul_location(n) for n in range(1, MAX_DRAGON_SOULS + 1)]
     # New locations are always appended, so existing IDs never change.
     + [s.name for line in QUEST_LINES.values() for s in line.steps]
+    + [name for names in WORD_WALL_LOCATIONS.values() for name in names]
 )
 
 LOCATION_TABLE: dict[str, int] = {
@@ -272,16 +348,20 @@ LOCATION_TABLE: dict[str, int] = {
 REGIONS = ["Skyrim", *CITY_KEYS]
 
 
-def main_quest_requirements() -> dict[str, list[Req]]:
+def main_quest_requirements(word_walls: bool = False) -> dict[str, list[Req]]:
     """Cumulative requirements for each main quest step.
 
     Includes the key of every city an earlier step took place in, so that
     e.g. "Alduin's Wall" still requires the Solitude and Riften keys.
+    With word_walls, Fire Breath is shuffled too, and Paarthurnax asks you to
+    use it on the Throat of the World.
     """
     result: dict[str, list[Req]] = {}
     needed: dict[str, int] = {}
     for step in MAIN_QUEST:
         reqs = list(step.requires)
+        if word_walls and step.name == "The Throat of the World":
+            reqs.append(has_shout("Fire Breath"))
         if step.region in CITY_KEYS:
             reqs.append((CITY_KEYS[step.region], 1))
         for item, count in reqs:
