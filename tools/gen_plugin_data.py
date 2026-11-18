@@ -144,6 +144,62 @@ LOCATION_QUEST = {
     **{name: edid for name, (edid, _) in QUEST_LINE_QUESTS.items()},
 }
 
+DAWNGUARD = "Dawnguard.esm"
+DRAGONBORN = "Dragonborn.esm"
+
+
+def dlc(plugin: str, local_id: int) -> str:
+    return f"{plugin}|0x{local_id:06X}"
+
+
+# Locations added in v0.4: name -> list of quest forms (any one completed counts).
+EXTRA_QUESTS = {
+    "Bards College - Finn's Lute": [form(0x0D93FA)],
+    "Bards College - Pantea's Flute": [form(0x0D9431)],
+    "Bards College - Rjorn's Drum": [form(0x0D944F)],
+    "Civil War (Imperial) - Joining the Legion": [form(0x0D517A)],
+    "Civil War (Imperial) - The Jagged Crown": [form(0x02D75C)],
+    "Civil War (Imperial) - Message to Whiterun": [form(0x0D661C)],
+    "Civil War (Imperial) - Reunification of Skyrim": [form(0x029940)],
+    "Civil War (Stormcloak) - Joining the Stormcloaks": [form(0x0E2D29)],
+    "Civil War (Stormcloak) - The Jagged Crown": [form(0x02610B)],
+    "Civil War (Stormcloak) - Message to Whiterun": [form(0x0D661C)],
+    "Civil War (Stormcloak) - Liberation of Skyrim": [form(0x029940)],
+    "Dawnguard - Awakening": [dlc(DAWNGUARD, 0x00352A)],
+    "Dawnguard - Bloodline": [dlc(DAWNGUARD, 0x002F65)],
+    "Dawnguard - Prophet": [dlc(DAWNGUARD, 0x0098CB), dlc(DAWNGUARD, 0x004C3D)],  # Dawnguard / vampire side
+    "Dawnguard - Chasing Echoes": [dlc(DAWNGUARD, 0x00284F)],
+    "Dawnguard - Beyond Death": [dlc(DAWNGUARD, 0x002850)],
+    "Dawnguard - Unseen Visions": [dlc(DAWNGUARD, 0x002852)],
+    "Dawnguard - Touching the Sky": [dlc(DAWNGUARD, 0x002853)],
+    "Dawnguard - Kindred Judgment": [dlc(DAWNGUARD, 0x007C25)],
+    "Dragonborn - Dragonborn": [dlc(DRAGONBORN, 0x017F8E)],
+    "Dragonborn - The Temple of Miraak": [dlc(DRAGONBORN, 0x017F8F)],
+    "Dragonborn - The Fate of the Skaal": [dlc(DRAGONBORN, 0x017F90)],
+    "Dragonborn - The Path of Knowledge": [dlc(DRAGONBORN, 0x016E1F)],
+    "Dragonborn - The Gardener of Men": [dlc(DRAGONBORN, 0x0179DE)],
+    "Dragonborn - At the Summit of Apocrypha": [dlc(DRAGONBORN, 0x0179D7)],
+    "Legendary - Forbidden Legend": [form(0x0E4D31)],
+    "Legendary - The Forgemaster's Fingers": [form(0x076335)],
+    "Legendary - No Stone Unturned": [form(0x09DD77)],
+    "Legendary - The Lost Expedition": [form(0x0C3709)],
+    "Legendary - Unfathomable Depths": [form(0x0209CA)],
+    "Legendary - Blood on the Ice": [form(0x01F7A3)],
+    "Legendary - Rise in the East": [form(0x01DBFC)],
+    "Legendary - The Book of Love": [form(0x0211D5)],
+    "Legendary - Infiltration": [form(0x04B2A1)],
+    "Legendary - Lost to the Ages": [dlc(DAWNGUARD, 0x005817)],
+    "Legendary - Lost Legacy": [dlc(DRAGONBORN, 0x019B4A)],
+}
+
+MASKS = {
+    "Hevnoraak": 0x04D6E7, "Krosis": 0x100767, "Morokei": 0x061C8B, "Nahkriin": 0x061CA5, "Otar": 0x061CC2,
+    "Rahgot": 0x061CC0, "Vokun": 0x061CC9, "Volsung": 0x061CAB, "Konahrik": 0x061CD6,
+}
+
+# Skill name -> RE::ActorValue index (kOneHanded = 6 ... kEnchanting = 23).
+SKILL_AV = {name: 6 + i for i, name in enumerate(data.SKILLS)}
+
 CITIES = {
     # city: (worldspace editor ID, French name)
     "Whiterun": ("WhiterunWorld", "Blancherive"),
@@ -214,6 +270,15 @@ def main() -> None:
             continue  # sent by the shout tracking, see "shouts" below
         if name.startswith("Dragon Soul "):
             locations.append({"id": loc_id, "name": name, "dragon_soul": int(name.split()[-1])})
+        elif name in EXTRA_QUESTS:
+            locations.append({"id": loc_id, "name": name, "quests": EXTRA_QUESTS[name]})
+        elif name.startswith("Dragon Priest Mask - "):
+            locations.append({"id": loc_id, "name": name, "item": form(MASKS[name.removeprefix("Dragon Priest Mask - ")])})
+        elif name.startswith("Level "):
+            locations.append({"id": loc_id, "name": name, "level": int(name.split()[-1])})
+        elif name.rsplit(" ", 1)[0] in SKILL_AV:
+            skill, value = name.rsplit(" ", 1)
+            locations.append({"id": loc_id, "name": name, "skill": SKILL_AV[skill], "value": int(value)})
         else:
             locations.append({"id": loc_id, "name": name, "quest": form(Q[LOCATION_QUEST[name]])})
 

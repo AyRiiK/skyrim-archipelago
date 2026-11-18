@@ -957,6 +957,816 @@
       "id": 1398345836,
       "name": "Daedric - Waking Nightmare",
       "quest": "Skyrim.esm|0x0242AF"
+    },
+    {
+      "id": 1398345880,
+      "name": "Bards College - Finn's Lute",
+      "quests": [
+        "Skyrim.esm|0x0D93FA"
+      ]
+    },
+    {
+      "id": 1398345881,
+      "name": "Bards College - Pantea's Flute",
+      "quests": [
+        "Skyrim.esm|0x0D9431"
+      ]
+    },
+    {
+      "id": 1398345882,
+      "name": "Bards College - Rjorn's Drum",
+      "quests": [
+        "Skyrim.esm|0x0D944F"
+      ]
+    },
+    {
+      "id": 1398345883,
+      "name": "Civil War (Imperial) - Joining the Legion",
+      "quests": [
+        "Skyrim.esm|0x0D517A"
+      ]
+    },
+    {
+      "id": 1398345884,
+      "name": "Civil War (Imperial) - The Jagged Crown",
+      "quests": [
+        "Skyrim.esm|0x02D75C"
+      ]
+    },
+    {
+      "id": 1398345885,
+      "name": "Civil War (Imperial) - Message to Whiterun",
+      "quests": [
+        "Skyrim.esm|0x0D661C"
+      ]
+    },
+    {
+      "id": 1398345886,
+      "name": "Civil War (Imperial) - Reunification of Skyrim",
+      "quests": [
+        "Skyrim.esm|0x029940"
+      ]
+    },
+    {
+      "id": 1398345887,
+      "name": "Civil War (Stormcloak) - Joining the Stormcloaks",
+      "quests": [
+        "Skyrim.esm|0x0E2D29"
+      ]
+    },
+    {
+      "id": 1398345888,
+      "name": "Civil War (Stormcloak) - The Jagged Crown",
+      "quests": [
+        "Skyrim.esm|0x02610B"
+      ]
+    },
+    {
+      "id": 1398345889,
+      "name": "Civil War (Stormcloak) - Message to Whiterun",
+      "quests": [
+        "Skyrim.esm|0x0D661C"
+      ]
+    },
+    {
+      "id": 1398345890,
+      "name": "Civil War (Stormcloak) - Liberation of Skyrim",
+      "quests": [
+        "Skyrim.esm|0x029940"
+      ]
+    },
+    {
+      "id": 1398345891,
+      "name": "Dawnguard - Awakening",
+      "quests": [
+        "Dawnguard.esm|0x00352A"
+      ]
+    },
+    {
+      "id": 1398345892,
+      "name": "Dawnguard - Bloodline",
+      "quests": [
+        "Dawnguard.esm|0x002F65"
+      ]
+    },
+    {
+      "id": 1398345893,
+      "name": "Dawnguard - Prophet",
+      "quests": [
+        "Dawnguard.esm|0x0098CB",
+        "Dawnguard.esm|0x004C3D"
+      ]
+    },
+    {
+      "id": 1398345894,
+      "name": "Dawnguard - Chasing Echoes",
+      "quests": [
+        "Dawnguard.esm|0x00284F"
+      ]
+    },
+    {
+      "id": 1398345895,
+      "name": "Dawnguard - Beyond Death",
+      "quests": [
+        "Dawnguard.esm|0x002850"
+      ]
+    },
+    {
+      "id": 1398345896,
+      "name": "Dawnguard - Unseen Visions",
+      "quests": [
+        "Dawnguard.esm|0x002852"
+      ]
+    },
+    {
+      "id": 1398345897,
+      "name": "Dawnguard - Touching the Sky",
+      "quests": [
+        "Dawnguard.esm|0x002853"
+      ]
+    },
+    {
+      "id": 1398345898,
+      "name": "Dawnguard - Kindred Judgment",
+      "quests": [
+        "Dawnguard.esm|0x007C25"
+      ]
+    },
+    {
+      "id": 1398345899,
+      "name": "Dragonborn - Dragonborn",
+      "quests": [
+        "Dragonborn.esm|0x017F8E"
+      ]
+    },
+    {
+      "id": 1398345900,
+      "name": "Dragonborn - The Temple of Miraak",
+      "quests": [
+        "Dragonborn.esm|0x017F8F"
+      ]
+    },
+    {
+      "id": 1398345901,
+      "name": "Dragonborn - The Fate of the Skaal",
+      "quests": [
+        "Dragonborn.esm|0x017F90"
+      ]
+    },
+    {
+      "id": 1398345902,
+      "name": "Dragonborn - The Path of Knowledge",
+      "quests": [
+        "Dragonborn.esm|0x016E1F"
+      ]
+    },
+    {
+      "id": 1398345903,
+      "name": "Dragonborn - The Gardener of Men",
+      "quests": [
+        "Dragonborn.esm|0x0179DE"
+      ]
+    },
+    {
+      "id": 1398345904,
+      "name": "Dragonborn - At the Summit of Apocrypha",
+      "quests": [
+        "Dragonborn.esm|0x0179D7"
+      ]
+    },
+    {
+      "id": 1398345905,
+      "name": "Legendary - Forbidden Legend",
+      "quests": [
+        "Skyrim.esm|0x0E4D31"
+      ]
+    },
+    {
+      "id": 1398345906,
+      "name": "Legendary - The Forgemaster's Fingers",
+      "quests": [
+        "Skyrim.esm|0x076335"
+      ]
+    },
+    {
+      "id": 1398345907,
+      "name": "Legendary - No Stone Unturned",
+      "quests": [
+        "Skyrim.esm|0x09DD77"
+      ]
+    },
+    {
+      "id": 1398345908,
+      "name": "Legendary - The Lost Expedition",
+      "quests": [
+        "Skyrim.esm|0x0C3709"
+      ]
+    },
+    {
+      "id": 1398345909,
+      "name": "Legendary - Unfathomable Depths",
+      "quests": [
+        "Skyrim.esm|0x0209CA"
+      ]
+    },
+    {
+      "id": 1398345910,
+      "name": "Legendary - Blood on the Ice",
+      "quests": [
+        "Skyrim.esm|0x01F7A3"
+      ]
+    },
+    {
+      "id": 1398345911,
+      "name": "Legendary - Rise in the East",
+      "quests": [
+        "Skyrim.esm|0x01DBFC"
+      ]
+    },
+    {
+      "id": 1398345912,
+      "name": "Legendary - The Book of Love",
+      "quests": [
+        "Skyrim.esm|0x0211D5"
+      ]
+    },
+    {
+      "id": 1398345913,
+      "name": "Legendary - Infiltration",
+      "quests": [
+        "Skyrim.esm|0x04B2A1"
+      ]
+    },
+    {
+      "id": 1398345914,
+      "name": "Legendary - Lost to the Ages",
+      "quests": [
+        "Dawnguard.esm|0x005817"
+      ]
+    },
+    {
+      "id": 1398345915,
+      "name": "Legendary - Lost Legacy",
+      "quests": [
+        "Dragonborn.esm|0x019B4A"
+      ]
+    },
+    {
+      "id": 1398345916,
+      "name": "Dragon Priest Mask - Hevnoraak",
+      "item": "Skyrim.esm|0x04D6E7"
+    },
+    {
+      "id": 1398345917,
+      "name": "Dragon Priest Mask - Krosis",
+      "item": "Skyrim.esm|0x100767"
+    },
+    {
+      "id": 1398345918,
+      "name": "Dragon Priest Mask - Morokei",
+      "item": "Skyrim.esm|0x061C8B"
+    },
+    {
+      "id": 1398345919,
+      "name": "Dragon Priest Mask - Nahkriin",
+      "item": "Skyrim.esm|0x061CA5"
+    },
+    {
+      "id": 1398345920,
+      "name": "Dragon Priest Mask - Otar",
+      "item": "Skyrim.esm|0x061CC2"
+    },
+    {
+      "id": 1398345921,
+      "name": "Dragon Priest Mask - Rahgot",
+      "item": "Skyrim.esm|0x061CC0"
+    },
+    {
+      "id": 1398345922,
+      "name": "Dragon Priest Mask - Vokun",
+      "item": "Skyrim.esm|0x061CC9"
+    },
+    {
+      "id": 1398345923,
+      "name": "Dragon Priest Mask - Volsung",
+      "item": "Skyrim.esm|0x061CAB"
+    },
+    {
+      "id": 1398345924,
+      "name": "Dragon Priest Mask - Konahrik",
+      "item": "Skyrim.esm|0x061CD6"
+    },
+    {
+      "id": 1398345925,
+      "name": "Level 5",
+      "level": 5
+    },
+    {
+      "id": 1398345926,
+      "name": "Level 10",
+      "level": 10
+    },
+    {
+      "id": 1398345927,
+      "name": "Level 15",
+      "level": 15
+    },
+    {
+      "id": 1398345928,
+      "name": "Level 20",
+      "level": 20
+    },
+    {
+      "id": 1398345929,
+      "name": "Level 25",
+      "level": 25
+    },
+    {
+      "id": 1398345930,
+      "name": "Level 30",
+      "level": 30
+    },
+    {
+      "id": 1398345931,
+      "name": "Level 35",
+      "level": 35
+    },
+    {
+      "id": 1398345932,
+      "name": "Level 40",
+      "level": 40
+    },
+    {
+      "id": 1398345933,
+      "name": "Level 45",
+      "level": 45
+    },
+    {
+      "id": 1398345934,
+      "name": "Level 50",
+      "level": 50
+    },
+    {
+      "id": 1398345935,
+      "name": "Level 55",
+      "level": 55
+    },
+    {
+      "id": 1398345936,
+      "name": "Level 60",
+      "level": 60
+    },
+    {
+      "id": 1398345937,
+      "name": "Level 65",
+      "level": 65
+    },
+    {
+      "id": 1398345938,
+      "name": "Level 70",
+      "level": 70
+    },
+    {
+      "id": 1398345939,
+      "name": "Level 75",
+      "level": 75
+    },
+    {
+      "id": 1398345940,
+      "name": "Level 80",
+      "level": 80
+    },
+    {
+      "id": 1398345941,
+      "name": "One-Handed 25",
+      "skill": 6,
+      "value": 25
+    },
+    {
+      "id": 1398345942,
+      "name": "One-Handed 50",
+      "skill": 6,
+      "value": 50
+    },
+    {
+      "id": 1398345943,
+      "name": "One-Handed 75",
+      "skill": 6,
+      "value": 75
+    },
+    {
+      "id": 1398345944,
+      "name": "One-Handed 100",
+      "skill": 6,
+      "value": 100
+    },
+    {
+      "id": 1398345945,
+      "name": "Two-Handed 25",
+      "skill": 7,
+      "value": 25
+    },
+    {
+      "id": 1398345946,
+      "name": "Two-Handed 50",
+      "skill": 7,
+      "value": 50
+    },
+    {
+      "id": 1398345947,
+      "name": "Two-Handed 75",
+      "skill": 7,
+      "value": 75
+    },
+    {
+      "id": 1398345948,
+      "name": "Two-Handed 100",
+      "skill": 7,
+      "value": 100
+    },
+    {
+      "id": 1398345949,
+      "name": "Archery 25",
+      "skill": 8,
+      "value": 25
+    },
+    {
+      "id": 1398345950,
+      "name": "Archery 50",
+      "skill": 8,
+      "value": 50
+    },
+    {
+      "id": 1398345951,
+      "name": "Archery 75",
+      "skill": 8,
+      "value": 75
+    },
+    {
+      "id": 1398345952,
+      "name": "Archery 100",
+      "skill": 8,
+      "value": 100
+    },
+    {
+      "id": 1398345953,
+      "name": "Block 25",
+      "skill": 9,
+      "value": 25
+    },
+    {
+      "id": 1398345954,
+      "name": "Block 50",
+      "skill": 9,
+      "value": 50
+    },
+    {
+      "id": 1398345955,
+      "name": "Block 75",
+      "skill": 9,
+      "value": 75
+    },
+    {
+      "id": 1398345956,
+      "name": "Block 100",
+      "skill": 9,
+      "value": 100
+    },
+    {
+      "id": 1398345957,
+      "name": "Smithing 25",
+      "skill": 10,
+      "value": 25
+    },
+    {
+      "id": 1398345958,
+      "name": "Smithing 50",
+      "skill": 10,
+      "value": 50
+    },
+    {
+      "id": 1398345959,
+      "name": "Smithing 75",
+      "skill": 10,
+      "value": 75
+    },
+    {
+      "id": 1398345960,
+      "name": "Smithing 100",
+      "skill": 10,
+      "value": 100
+    },
+    {
+      "id": 1398345961,
+      "name": "Heavy Armor 25",
+      "skill": 11,
+      "value": 25
+    },
+    {
+      "id": 1398345962,
+      "name": "Heavy Armor 50",
+      "skill": 11,
+      "value": 50
+    },
+    {
+      "id": 1398345963,
+      "name": "Heavy Armor 75",
+      "skill": 11,
+      "value": 75
+    },
+    {
+      "id": 1398345964,
+      "name": "Heavy Armor 100",
+      "skill": 11,
+      "value": 100
+    },
+    {
+      "id": 1398345965,
+      "name": "Light Armor 25",
+      "skill": 12,
+      "value": 25
+    },
+    {
+      "id": 1398345966,
+      "name": "Light Armor 50",
+      "skill": 12,
+      "value": 50
+    },
+    {
+      "id": 1398345967,
+      "name": "Light Armor 75",
+      "skill": 12,
+      "value": 75
+    },
+    {
+      "id": 1398345968,
+      "name": "Light Armor 100",
+      "skill": 12,
+      "value": 100
+    },
+    {
+      "id": 1398345969,
+      "name": "Pickpocket 25",
+      "skill": 13,
+      "value": 25
+    },
+    {
+      "id": 1398345970,
+      "name": "Pickpocket 50",
+      "skill": 13,
+      "value": 50
+    },
+    {
+      "id": 1398345971,
+      "name": "Pickpocket 75",
+      "skill": 13,
+      "value": 75
+    },
+    {
+      "id": 1398345972,
+      "name": "Pickpocket 100",
+      "skill": 13,
+      "value": 100
+    },
+    {
+      "id": 1398345973,
+      "name": "Lockpicking 25",
+      "skill": 14,
+      "value": 25
+    },
+    {
+      "id": 1398345974,
+      "name": "Lockpicking 50",
+      "skill": 14,
+      "value": 50
+    },
+    {
+      "id": 1398345975,
+      "name": "Lockpicking 75",
+      "skill": 14,
+      "value": 75
+    },
+    {
+      "id": 1398345976,
+      "name": "Lockpicking 100",
+      "skill": 14,
+      "value": 100
+    },
+    {
+      "id": 1398345977,
+      "name": "Sneak 25",
+      "skill": 15,
+      "value": 25
+    },
+    {
+      "id": 1398345978,
+      "name": "Sneak 50",
+      "skill": 15,
+      "value": 50
+    },
+    {
+      "id": 1398345979,
+      "name": "Sneak 75",
+      "skill": 15,
+      "value": 75
+    },
+    {
+      "id": 1398345980,
+      "name": "Sneak 100",
+      "skill": 15,
+      "value": 100
+    },
+    {
+      "id": 1398345981,
+      "name": "Alchemy 25",
+      "skill": 16,
+      "value": 25
+    },
+    {
+      "id": 1398345982,
+      "name": "Alchemy 50",
+      "skill": 16,
+      "value": 50
+    },
+    {
+      "id": 1398345983,
+      "name": "Alchemy 75",
+      "skill": 16,
+      "value": 75
+    },
+    {
+      "id": 1398345984,
+      "name": "Alchemy 100",
+      "skill": 16,
+      "value": 100
+    },
+    {
+      "id": 1398345985,
+      "name": "Speech 25",
+      "skill": 17,
+      "value": 25
+    },
+    {
+      "id": 1398345986,
+      "name": "Speech 50",
+      "skill": 17,
+      "value": 50
+    },
+    {
+      "id": 1398345987,
+      "name": "Speech 75",
+      "skill": 17,
+      "value": 75
+    },
+    {
+      "id": 1398345988,
+      "name": "Speech 100",
+      "skill": 17,
+      "value": 100
+    },
+    {
+      "id": 1398345989,
+      "name": "Alteration 25",
+      "skill": 18,
+      "value": 25
+    },
+    {
+      "id": 1398345990,
+      "name": "Alteration 50",
+      "skill": 18,
+      "value": 50
+    },
+    {
+      "id": 1398345991,
+      "name": "Alteration 75",
+      "skill": 18,
+      "value": 75
+    },
+    {
+      "id": 1398345992,
+      "name": "Alteration 100",
+      "skill": 18,
+      "value": 100
+    },
+    {
+      "id": 1398345993,
+      "name": "Conjuration 25",
+      "skill": 19,
+      "value": 25
+    },
+    {
+      "id": 1398345994,
+      "name": "Conjuration 50",
+      "skill": 19,
+      "value": 50
+    },
+    {
+      "id": 1398345995,
+      "name": "Conjuration 75",
+      "skill": 19,
+      "value": 75
+    },
+    {
+      "id": 1398345996,
+      "name": "Conjuration 100",
+      "skill": 19,
+      "value": 100
+    },
+    {
+      "id": 1398345997,
+      "name": "Destruction 25",
+      "skill": 20,
+      "value": 25
+    },
+    {
+      "id": 1398345998,
+      "name": "Destruction 50",
+      "skill": 20,
+      "value": 50
+    },
+    {
+      "id": 1398345999,
+      "name": "Destruction 75",
+      "skill": 20,
+      "value": 75
+    },
+    {
+      "id": 1398346000,
+      "name": "Destruction 100",
+      "skill": 20,
+      "value": 100
+    },
+    {
+      "id": 1398346001,
+      "name": "Illusion 25",
+      "skill": 21,
+      "value": 25
+    },
+    {
+      "id": 1398346002,
+      "name": "Illusion 50",
+      "skill": 21,
+      "value": 50
+    },
+    {
+      "id": 1398346003,
+      "name": "Illusion 75",
+      "skill": 21,
+      "value": 75
+    },
+    {
+      "id": 1398346004,
+      "name": "Illusion 100",
+      "skill": 21,
+      "value": 100
+    },
+    {
+      "id": 1398346005,
+      "name": "Restoration 25",
+      "skill": 22,
+      "value": 25
+    },
+    {
+      "id": 1398346006,
+      "name": "Restoration 50",
+      "skill": 22,
+      "value": 50
+    },
+    {
+      "id": 1398346007,
+      "name": "Restoration 75",
+      "skill": 22,
+      "value": 75
+    },
+    {
+      "id": 1398346008,
+      "name": "Restoration 100",
+      "skill": 22,
+      "value": 100
+    },
+    {
+      "id": 1398346009,
+      "name": "Enchanting 25",
+      "skill": 23,
+      "value": 25
+    },
+    {
+      "id": 1398346010,
+      "name": "Enchanting 50",
+      "skill": 23,
+      "value": 50
+    },
+    {
+      "id": 1398346011,
+      "name": "Enchanting 75",
+      "skill": 23,
+      "value": 75
+    },
+    {
+      "id": 1398346012,
+      "name": "Enchanting 100",
+      "skill": 23,
+      "value": 100
     }
   ]
 }

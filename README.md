@@ -9,7 +9,8 @@ Intégration de **The Elder Scrolls V: Skyrim Special Edition** (Steam, version 
 - Les cinq villes fortifiées (Blancherive, Solitude, Vendeaume, Faillaise, Markarth) sont **verrouillées** tant que tu n'as pas reçu leur clé.
 - Les mots des cris de la quête principale (Force implacable, Impulsion, Ciel dégagé, Brise-Dragon, Appel de dragon) viennent du multiworld.
 - Finir des étapes de la quête principale, une quête par grande ville et absorber des âmes de dragon envoie des objets aux autres joueurs.
-- Lignes de quêtes optionnelles (option `quest_lines`) : Compagnons, Collège de Fortdhiver, Guilde des voleurs, Confrérie noire, quêtes daedriques.
+- Lignes de quêtes optionnelles (option `quest_lines`) : Compagnons, Collège de Fortdhiver, Guilde des voleurs, Confrérie noire, quêtes daedriques, Collège des bardes, guerre civile (un camp), Dawnguard, Dragonborn.
+- Autres checks optionnels : quêtes légendaires, masques de prêtres-dragons, niveaux, paliers de compétences.
 - Murs de mots (option `word_walls`) : les 20 cris du jeu de base sont mélangés et chaque mur de mots devient un check.
 - Objectif : vaincre Alduin, absorber X âmes de dragon, finir les lignes de quêtes choisies, ou Alduin + les lignes.
 

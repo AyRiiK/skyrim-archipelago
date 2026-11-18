@@ -12,7 +12,9 @@ from worlds.generic.Rules import set_rule
 from . import data
 from .data import (CITY_KEYS, CITY_QUESTS, GAME_NAME, ITEM_TABLE, LOCATION_TABLE, MAIN_QUEST, QUEST_LINES, SHOUTS,
                    WORD_WALLS, WORDS_PER_SHOUT, Req, dragon_soul_location, progressive_shout,
-                   quest_line_requirements, EXTRA_SHOUTS, WORD_WALL_LOCATIONS, word_wall_requirements)
+                   quest_line_requirements, EXTRA_SHOUTS, WORD_WALL_LOCATIONS, word_wall_requirements,
+                   DRAGON_PRIEST_MASKS, LEGENDARY_QUESTS, LEVEL_STEP, SKILLS, SKILL_THRESHOLDS, legendary_location,
+                   level_location, mask_location, mask_requirements, skill_location)
 from .options import SkyrimOptions, option_groups
 
 _CLASSIFICATIONS = {
@@ -93,6 +95,10 @@ class SkyrimWorld(World):
         "Dragon Souls": {dragon_soul_location(n) for n in range(1, data.MAX_DRAGON_SOULS + 1)},
         **{line: {s.name for s in QUEST_LINES[line].steps} for line in QUEST_LINES},
         "Word Walls": {n for names in WORD_WALL_LOCATIONS.values() for n in names},
+        "Legendary Quests": {legendary_location(q) for q in LEGENDARY_QUESTS},
+        "Dragon Priest Masks": {mask_location(m) for m in DRAGON_PRIEST_MASKS},
+        "Levels": {level_location(lv) for lv in range(LEVEL_STEP, data.MAX_LEVEL_CHECK + 1, LEVEL_STEP)},
+        "Skills": {skill_location(sk, v) for sk in SKILLS for v in SKILL_THRESHOLDS},
     }
 
     # ------------------------------------------------------------------ #
@@ -102,6 +108,8 @@ class SkyrimWorld(World):
         if self.options.goal in (self.options.goal.option_quest_lines, self.options.goal.option_alduin_and_quest_lines) \
                 and not self.options.quest_lines.value:
             raise OptionError(f"{self.player_name}: the {self.options.goal.current_key} goal needs at least one quest line.")
+        if {"Civil War (Imperial)", "Civil War (Stormcloak)"} <= self.options.quest_lines.value:
+            raise OptionError(f"{self.player_name}: choose only one side of the civil war in quest_lines.")
         if self.options.start_with_whiterun_key:
             self.multiworld.push_precollected(self.create_item(CITY_KEYS["Whiterun"]))
 
@@ -127,6 +135,16 @@ class SkyrimWorld(World):
             for names in WORD_WALL_LOCATIONS.values():
                 for name in names:
                     add("Skyrim", name)
+        for quest in sorted(self.options.legendary_quests.value):
+            add("Skyrim", legendary_location(quest))
+        if self.options.dragon_priest_masks:
+            for mask in DRAGON_PRIEST_MASKS:
+                add("Skyrim", mask_location(mask))
+        for level in range(LEVEL_STEP, self.options.level_checks.value + 1, LEVEL_STEP):
+            add("Skyrim", level_location(level))
+        for value in SKILL_THRESHOLDS[: self.options.skill_checks.value]:
+            for skill in SKILLS:
+                add("Skyrim", skill_location(skill, value))
 
         goal = SkyrimLocation(self.player, GOAL_EVENT, None, skyrim)
         goal.place_locked_item(SkyrimItem(VICTORY_ITEM, ItemClassification.progression, None, self.player))
@@ -212,6 +230,12 @@ class SkyrimWorld(World):
                         needed[item] = max(needed.get(item, 0), count)
                     set_rule(self.get_location(name), _has_all(list(needed.items()), self.player))
 
+        for quest in self.options.legendary_quests.value:
+            set_rule(self.get_location(legendary_location(quest)), _has_all(LEGENDARY_QUESTS[quest], self.player))
+        if self.options.dragon_priest_masks:
+            for mask, reqs in mask_requirements().items():
+                set_rule(self.get_location(mask_location(mask)), _has_all(reqs, self.player))
+
         goal_reqs: dict[str, int] = {}
         for item, count in self._goal_requirements():
             goal_reqs[item] = max(goal_reqs.get(item, 0), count)
@@ -252,6 +276,8 @@ class SkyrimWorld(World):
             if self.options.goal == self.options.goal.option_dragon_souls else 0,
             "quest_lines": sorted(self.options.quest_lines.value),
             "word_walls": int(bool(self.options.word_walls)),
+            "level_checks": self.options.level_checks.value,
+            "skill_checks": self.options.skill_checks.value,
             **self.options.as_dict(
                 "goal", "dragon_soul_checks", "start_with_whiterun_key", "auto_unlock_shouts", "death_link"
             ),

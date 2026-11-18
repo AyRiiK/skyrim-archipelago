@@ -249,13 +249,108 @@ QUEST_LINES: dict[str, QuestLine] = {
         QuestStep("Daedric - The Mind of Madness", "Solitude"),
         QuestStep("Daedric - Waking Nightmare", "Skyrim"),
     ], sequential=False),
+    # ---- added in v0.4 (their locations come after the word walls) ----
+    "Bards College": QuestLine([
+        QuestStep("Bards College - Finn's Lute", "Solitude"),
+        QuestStep("Bards College - Pantea's Flute", "Solitude"),
+        QuestStep("Bards College - Rjorn's Drum", "Solitude"),
+    ], sequential=False),
+    "Civil War (Imperial)": QuestLine([
+        QuestStep("Civil War (Imperial) - Joining the Legion", "Solitude"),
+        QuestStep("Civil War (Imperial) - The Jagged Crown", "Solitude"),
+        QuestStep("Civil War (Imperial) - Message to Whiterun", "Whiterun"),
+        QuestStep("Civil War (Imperial) - Reunification of Skyrim", "Solitude"),
+    ], sequential=True),
+    "Civil War (Stormcloak)": QuestLine([
+        QuestStep("Civil War (Stormcloak) - Joining the Stormcloaks", "Windhelm"),
+        QuestStep("Civil War (Stormcloak) - The Jagged Crown", "Windhelm"),
+        QuestStep("Civil War (Stormcloak) - Message to Whiterun", "Whiterun"),
+        QuestStep("Civil War (Stormcloak) - Liberation of Skyrim", "Windhelm"),
+    ], sequential=True),
+    "Dawnguard": QuestLine([
+        QuestStep("Dawnguard - Awakening", "Skyrim"),
+        QuestStep("Dawnguard - Bloodline", "Skyrim"),
+        QuestStep("Dawnguard - Prophet", "Skyrim"),
+        QuestStep("Dawnguard - Chasing Echoes", "Skyrim"),
+        QuestStep("Dawnguard - Beyond Death", "Skyrim"),
+        QuestStep("Dawnguard - Unseen Visions", "Skyrim"),
+        QuestStep("Dawnguard - Touching the Sky", "Skyrim"),
+        QuestStep("Dawnguard - Kindred Judgment", "Skyrim"),
+    ], sequential=True),
+    "Dragonborn": QuestLine([
+        QuestStep("Dragonborn - Dragonborn", "Skyrim"),
+        QuestStep("Dragonborn - The Temple of Miraak", "Skyrim"),
+        QuestStep("Dragonborn - The Fate of the Skaal", "Skyrim"),
+        QuestStep("Dragonborn - The Path of Knowledge", "Skyrim"),
+        QuestStep("Dragonborn - The Gardener of Men", "Skyrim"),
+        QuestStep("Dragonborn - At the Summit of Apocrypha", "Skyrim"),
+    ], sequential=True),
 }
 
-# A city quest that opens a line: its city key is needed for the whole line.
+BASE_QUEST_LINES = ["Companions", "College of Winterhold", "Thieves Guild", "Dark Brotherhood", "Daedric Quests"]
+
+# Items needed before a line can start (e.g. the city quest that opens it).
 QUEST_LINE_START_KEYS: dict[str, list[Req]] = {
     "Companions": [key_for("Whiterun")],
     "Thieves Guild": [key_for("Riften")],
+    "Bards College": [key_for("Solitude")],
+    # Miraak's cultists only come after you are known as Dragonborn (Dragon Rising).
+    "Dragonborn": [key_for("Whiterun")],
 }
+
+# --------------------------------------------------------------------------- #
+# Legendary quests (YAML option "legendary_quests")
+# --------------------------------------------------------------------------- #
+# name -> items needed (city keys of where the quest takes place)
+LEGENDARY_QUESTS: dict[str, list[Req]] = {
+    "Forbidden Legend": [],
+    "The Forgemaster's Fingers": [key_for("Markarth")],
+    # Stones of Barenziah hide in every city, and Vex is in Riften.
+    "No Stone Unturned": [key_for(c) for c in ("Whiterun", "Solitude", "Windhelm", "Riften", "Markarth")],
+    "The Lost Expedition": [key_for("Markarth")],
+    "Unfathomable Depths": [],
+    "Blood on the Ice": [key_for("Windhelm")],
+    "Rise in the East": [key_for("Windhelm")],
+    "The Book of Love": [key_for("Riften")],
+    "Infiltration": [],
+    "Lost to the Ages": [],
+    "Lost Legacy": [],
+}
+
+
+def legendary_location(quest: str) -> str:
+    return f"Legendary - {quest}"
+
+
+# --------------------------------------------------------------------------- #
+# Dragon priest masks (YAML option "dragon_priest_masks")
+# --------------------------------------------------------------------------- #
+DRAGON_PRIEST_MASKS = ["Hevnoraak", "Krosis", "Morokei", "Nahkriin", "Otar", "Rahgot", "Vokun", "Volsung", "Konahrik"]
+
+
+def mask_location(mask: str) -> str:
+    return f"Dragon Priest Mask - {mask}"
+
+
+# --------------------------------------------------------------------------- #
+# Levels and skills (YAML options "level_checks" and "skill_checks")
+# --------------------------------------------------------------------------- #
+LEVEL_STEP = 5
+MAX_LEVEL_CHECK = 80
+SKILLS = [
+    "One-Handed", "Two-Handed", "Archery", "Block", "Smithing", "Heavy Armor", "Light Armor", "Pickpocket",
+    "Lockpicking", "Sneak", "Alchemy", "Speech", "Alteration", "Conjuration", "Destruction", "Illusion",
+    "Restoration", "Enchanting",
+]
+SKILL_THRESHOLDS = [25, 50, 75, 100]
+
+
+def level_location(level: int) -> str:
+    return f"Level {level}"
+
+
+def skill_location(skill: str, value: int) -> str:
+    return f"{skill} {value}"
 
 
 def quest_line_requirements(line_name: str) -> dict[str, list[Req]]:
@@ -337,8 +432,14 @@ _locations: list[str] = (
     + [s.name for s in WORD_WALLS]
     + [dragon_soul_location(n) for n in range(1, MAX_DRAGON_SOULS + 1)]
     # New locations are always appended, so existing IDs never change.
-    + [s.name for line in QUEST_LINES.values() for s in line.steps]
+    + [s.name for line in BASE_QUEST_LINES for s in QUEST_LINES[line].steps]
     + [name for names in WORD_WALL_LOCATIONS.values() for name in names]
+    # v0.4
+    + [s.name for line in QUEST_LINES if line not in BASE_QUEST_LINES for s in QUEST_LINES[line].steps]
+    + [legendary_location(q) for q in LEGENDARY_QUESTS]
+    + [mask_location(m) for m in DRAGON_PRIEST_MASKS]
+    + [level_location(lv) for lv in range(LEVEL_STEP, MAX_LEVEL_CHECK + 1, LEVEL_STEP)]
+    + [skill_location(sk, v) for sk in SKILLS for v in SKILL_THRESHOLDS]
 )
 
 LOCATION_TABLE: dict[str, int] = {
@@ -368,3 +469,18 @@ def main_quest_requirements(word_walls: bool = False) -> dict[str, list[Req]]:
             needed[item] = max(needed.get(item, 0), count)
         result[step.name] = list(needed.items())
     return result
+
+
+def mask_requirements() -> dict[str, list[Req]]:
+    mq = main_quest_requirements()
+    college = quest_line_requirements("College of Winterhold")
+    reqs: dict[str, list[Req]] = {m: [] for m in DRAGON_PRIEST_MASKS}
+    reqs["Nahkriin"] = mq["The World-Eater's Eyrie"]  # Skuldafn
+    reqs["Morokei"] = college["College - The Staff of Magnus"]  # Labyrinthian
+    # Konahrik needs the eight other masks.
+    merged: dict[str, int] = {}
+    for mask in DRAGON_PRIEST_MASKS[:-1]:
+        for item, count in reqs[mask]:
+            merged[item] = max(merged.get(item, 0), count)
+    reqs["Konahrik"] = list(merged.items())
+    return reqs

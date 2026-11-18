@@ -103,3 +103,28 @@ class TestWordWallsEverything(SkyrimTestBase):
         "dragon_soul_checks": 30,
         "perk_points": 20,
     }
+
+
+class TestEverythingV04(SkyrimTestBase):
+    options = {
+        "word_walls": True,
+        "quest_lines": ["Companions", "College of Winterhold", "Thieves Guild", "Dark Brotherhood", "Daedric Quests",
+                        "Bards College", "Civil War (Stormcloak)", "Dawnguard", "Dragonborn"],
+        "legendary_quests": ["Forbidden Legend", "The Forgemaster's Fingers", "No Stone Unturned",
+                             "The Lost Expedition", "Unfathomable Depths", "Blood on the Ice", "Rise in the East",
+                             "The Book of Love", "Infiltration", "Lost to the Ages", "Lost Legacy"],
+        "dragon_priest_masks": True,
+        "level_checks": 80,
+        "skill_checks": "up_to_100",
+        "goal": "alduin_and_quest_lines",
+    }
+
+    def test_counts(self) -> None:
+        self.assertEqual(len(self.multiworld.get_locations(self.player)), 285 - 20 - 4 + 1)  # 20 unused dragon souls, the other civil war side, + goal event
+
+    def test_masks(self) -> None:
+        self.assertTrue(self.can_reach_location("Dragon Priest Mask - Krosis"))
+        self.assertFalse(self.can_reach_location("Dragon Priest Mask - Konahrik"))
+        self.assertTrue(self.can_reach_location("Level 80"))
+        self.assertTrue(self.can_reach_location("Enchanting 100"))
+        self.assertFalse(self.can_reach_location("Legendary - No Stone Unturned"))

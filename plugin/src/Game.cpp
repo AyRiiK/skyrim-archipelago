@@ -30,8 +30,12 @@ namespace
 	{
 		std::int64_t  id{ 0 };
 		std::string   name;
-		RE::TESQuest* quest{ nullptr };
-		int           dragonSoul{ 0 };
+		std::vector<RE::TESQuest*> quests;  // any one completed sends the check
+		int                        dragonSoul{ 0 };
+		RE::TESBoundObject*        item{ nullptr };  // in the inventory
+		int                        level{ 0 };       // character level
+		int                        skill{ -1 };      // RE::ActorValue index
+		int                        value{ 0 };       // skill value
 	};
 
 	struct ShoutDef
@@ -98,6 +102,8 @@ namespace
 		std::map<int, std::string>       players;
 		std::vector<json>                items;
 		std::set<std::int64_t>           checked;
+		std::set<std::int64_t>           slotLocations;  // every location of this slot
+		std::chrono::steady_clock::time_point lastInventoryCheck{};
 		std::map<RE::TESShout*, int>     shoutsEnsured;
 		std::chrono::steady_clock::time_point lastMarkerUpdate{};
 		std::string                      lockedWarnedFor;
@@ -220,8 +226,13 @@ namespace
 				Client::Get().Send({ { "cmd", "ConnectUpdate" }, { "tags", json::array({ "AP", "DeathLink" }) } });
 			}
 			g_session.checked.clear();
+			g_session.slotLocations.clear();
 			for (const auto& id : a_msg.value("checked_locations", json::array())) {
 				g_session.checked.insert(id.get<std::int64_t>());
+				g_session.slotLocations.insert(id.get<std::int64_t>());
+			}
+			for (const auto& id : a_msg.value("missing_locations", json::array())) {
+				g_session.slotLocations.insert(id.get<std::int64_t>());
 			}
 			logger::info("Connected as slot {} (seed {})", g_session.slot, g_session.seedName);
 			Game::Notify("Archipelago : connecté !");
@@ -514,17 +525,52 @@ namespace
 
 	void CheckLocations()
 	{
-		json locations = json::array();
+		auto* player = Player();
+		json  locations = json::array();
+
+		// Inventory lookups are slower: every 2 seconds is enough.
+		const auto now = std::chrono::steady_clock::now();
+		const bool checkInventory = now - g_session.lastInventoryCheck > 2s;
+		std::set<RE::TESBoundObject*> owned;
+		if (checkInventory) {
+			g_session.lastInventoryCheck = now;
+			std::set<RE::TESBoundObject*> wanted;
+			for (const auto& loc : g_locations) {
+				if (loc.item && !g_session.checked.contains(loc.id)) {
+					wanted.insert(loc.item);
+				}
+			}
+			if (!wanted.empty()) {
+				const auto counts = player->GetInventoryCounts(
+					[&wanted](RE::TESBoundObject& a_obj) { return wanted.contains(&a_obj); });
+				for (const auto& [obj, count] : counts) {
+					if (count > 0) {
+						owned.insert(obj);
+					}
+				}
+			}
+		}
+
 		for (const auto& loc : g_locations) {
-			if (g_session.checked.contains(loc.id)) {
+			if (g_session.checked.contains(loc.id) ||
+				(!g_session.slotLocations.empty() && !g_session.slotLocations.contains(loc.id))) {
 				continue;
 			}
 			bool done = false;
 			if (loc.dragonSoul > 0) {
 				done = loc.dragonSoul <= g_session.dragonSoulChecks &&
 				       g_save.soulsAbsorbed >= static_cast<std::uint32_t>(loc.dragonSoul);
-			} else if (loc.quest) {
-				done = loc.quest->IsCompleted();
+			} else if (!loc.quests.empty()) {
+				for (auto* quest : loc.quests) {
+					done = done || (quest && quest->IsCompleted());
+				}
+			} else if (loc.item) {
+				done = owned.contains(loc.item);
+			} else if (loc.level > 0) {
+				done = player->GetLevel() >= loc.level;
+			} else if (loc.skill >= 0) {
+				const auto av = static_cast<RE::ActorValue>(loc.skill);
+				done = player->AsActorValueOwner()->GetBaseActorValue(av) >= static_cast<float>(loc.value);
 			}
 			if (done) {
 				locations.push_back(loc.id);
@@ -718,10 +764,26 @@ namespace Game
 			def.id = loc.value("id", std::int64_t{ 0 });
 			def.name = loc.value("name", std::string{});
 			def.dragonSoul = loc.value("dragon_soul", 0);
+			def.level = loc.value("level", 0);
+			def.skill = loc.value("skill", -1);
+			def.value = loc.value("value", 0);
+			std::vector<std::string> questRefs;
 			if (loc.contains("quest")) {
-				auto* form = LookupForm(loc["quest"].get<std::string>());
-				def.quest = form ? form->As<RE::TESQuest>() : nullptr;
-				logger::info("Location '{}' -> quest {}", def.name, FormInfo(def.quest));
+				questRefs.push_back(loc["quest"].get<std::string>());
+			}
+			for (const auto& ref : loc.value("quests", json::array())) {
+				questRefs.push_back(ref.get<std::string>());
+			}
+			for (const auto& ref : questRefs) {
+				auto* form = LookupForm(ref);
+				auto* quest = form ? form->As<RE::TESQuest>() : nullptr;
+				def.quests.push_back(quest);
+				logger::info("Location '{}' -> quest {}", def.name, FormInfo(quest));
+			}
+			if (loc.contains("item")) {
+				auto* form = LookupForm(loc["item"].get<std::string>());
+				def.item = form ? form->As<RE::TESBoundObject>() : nullptr;
+				logger::info("Location '{}' -> item {}", def.name, FormInfo(def.item));
 			}
 			g_locations.push_back(std::move(def));
 		}

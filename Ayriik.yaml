@@ -3,25 +3,44 @@ game: Skyrim Special Edition
 description: Partie Skyrim Archipelago
 
 Skyrim Special Edition:
-  # Objectif :
+  # ---------------------------------------------------------------- Objectif
   #   alduin                 -> finir la quête principale
   #   dragon_souls           -> absorber autant d'âmes que dragon_soul_checks
   #   quest_lines            -> finir toutes les lignes de quêtes choisies plus bas
   #   alduin_and_quest_lines -> les deux
   goal: alduin
-  # Lignes de quêtes en plus (chacune rallonge la partie). Enlève celles que tu ne veux pas.
-  #   Companions, College of Winterhold, Thieves Guild, Dark Brotherhood, Daedric Quests
-  quest_lines: []
-  # Murs de mots : les 20 cris du jeu sont mélangés et chaque mur devient un check
-  word_walls: false
   # Nombre d'âmes de dragon qui envoient un check (0 à 30)
   dragon_soul_checks: 10
+
+  # ---------------------------------------------------------- Durée de partie
+  # Lignes de quêtes en plus. Mets celles que tu veux entre les crochets, séparées par des virgules :
+  #   "Companions", "College of Winterhold", "Thieves Guild", "Dark Brotherhood", "Daedric Quests",
+  #   "Bards College", "Civil War (Imperial)" OU "Civil War (Stormcloak)", "Dawnguard", "Dragonborn"
+  # Exemple : quest_lines: ["Companions", "College of Winterhold"]
+  quest_lines: []
+  # Murs de mots : les 20 cris du jeu sont mélangés et chaque mur devient un check (43 checks)
+  word_walls: false
+  # Quêtes à récompense légendaire. Au choix :
+  #   "Forbidden Legend", "The Forgemaster's Fingers", "No Stone Unturned", "The Lost Expedition",
+  #   "Unfathomable Depths", "Blood on the Ice", "Rise in the East", "The Book of Love",
+  #   "Infiltration", "Lost to the Ages", "Lost Legacy"
+  legendary_quests: []
+  # Ramasser chacun des 9 masques de prêtres-dragons (Konahrik compris)
+  dragon_priest_masks: false
+  # Un check tous les 5 niveaux jusqu'à ce niveau (0 = désactivé, max 80)
+  level_checks: 0
+  # Paliers de compétences (18 compétences) : off, up_to_25, up_to_50, up_to_75, up_to_100
+  skill_checks: off
+
+  # ----------------------------------------------------------------- Objets
   # Commencer avec la clé de Blancherive (conseillé)
   start_with_whiterun_key: true
   # Points d'atout dans le pool d'objets (0 à 20)
   perk_points: 5
   # Pourcentage de pièges parmi les objets de remplissage (0 à 100)
   trap_chance: 15
+
+  # ------------------------------------------------------------------ Divers
   # Les mots de pouvoir reçus sont débloqués directement, sans âme de dragon
   auto_unlock_shouts: true
   # DeathLink : quand un joueur meurt, tout le monde meurt
