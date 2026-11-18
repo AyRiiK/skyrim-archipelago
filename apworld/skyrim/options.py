@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from Options import Choice, DeathLink, DefaultOnToggle, OptionGroup, PerGameCommonOptions, Range
+from Options import Choice, DeathLink, DefaultOnToggle, OptionGroup, OptionSet, PerGameCommonOptions, Range
 
-from .data import MAX_DRAGON_SOULS
+from .data import MAX_DRAGON_SOULS, QUEST_LINES
 
 
 class Goal(Choice):
@@ -10,11 +10,27 @@ class Goal(Choice):
 
     alduin: Defeat Alduin in Sovngarde (finish the main quest).
     dragon_souls: Absorb as many dragon souls as there are Dragon Soul checks.
+    quest_lines: Finish every quest line chosen in quest_lines
+        (for Daedric Quests: every Daedric quest).
+    alduin_and_quest_lines: Both of the above.
     """
     display_name = "Goal"
     option_alduin = 0
     option_dragon_souls = 1
+    option_quest_lines = 2
+    option_alduin_and_quest_lines = 3
     default = 0
+
+
+class QuestLines(OptionSet):
+    """Extra quest lines whose quests send checks. Each one makes the game longer.
+
+    Valid values: Companions, College of Winterhold, Thieves Guild,
+    Dark Brotherhood, Daedric Quests.
+    """
+    display_name = "Quest Lines"
+    valid_keys = frozenset(QUEST_LINES)
+    default = frozenset()
 
 
 class DragonSoulChecks(Range):
@@ -63,6 +79,7 @@ class AutoUnlockShouts(DefaultOnToggle):
 @dataclass
 class SkyrimOptions(PerGameCommonOptions):
     goal: Goal
+    quest_lines: QuestLines
     dragon_soul_checks: DragonSoulChecks
     start_with_whiterun_key: StartWithWhiterunKey
     perk_points: PerkPoints
@@ -73,6 +90,7 @@ class SkyrimOptions(PerGameCommonOptions):
 
 option_groups = [
     OptionGroup("Goal", [Goal, DragonSoulChecks]),
+    OptionGroup("Game Length", [QuestLines]),
     OptionGroup("Item Pool", [StartWithWhiterunKey, PerkPoints, TrapChance]),
     OptionGroup("Gameplay", [AutoUnlockShouts, DeathLink]),
 ]

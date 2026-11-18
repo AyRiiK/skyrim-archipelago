@@ -9,7 +9,8 @@ Intégration de **The Elder Scrolls V: Skyrim Special Edition** (Steam, version 
 - Les cinq villes fortifiées (Blancherive, Solitude, Vendeaume, Faillaise, Markarth) sont **verrouillées** tant que tu n'as pas reçu leur clé.
 - Les mots des cris de la quête principale (Force implacable, Impulsion, Ciel dégagé, Brise-Dragon, Appel de dragon) viennent du multiworld.
 - Finir des étapes de la quête principale, une quête par grande ville et absorber des âmes de dragon envoie des objets aux autres joueurs.
-- Objectif : vaincre Alduin à Sovngarde, ou absorber un nombre donné d'âmes de dragon.
+- Lignes de quêtes optionnelles (option `quest_lines`) : Compagnons, Collège de Fortdhiver, Guilde des voleurs, Confrérie noire, quêtes daedriques.
+- Objectif : vaincre Alduin, absorber X âmes de dragon, finir les lignes de quêtes choisies, ou Alduin + les lignes.
 
 ## Contenu du dépôt
 

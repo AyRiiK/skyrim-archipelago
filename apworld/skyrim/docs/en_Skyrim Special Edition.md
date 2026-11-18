@@ -8,10 +8,13 @@
   are no longer learned from word walls or the Greybeards: their words are items, received in order.
 - Checks are sent by completing main quest steps, one quest per walled city, the Bleak Falls Barrow word wall,
   and absorbing dragon souls.
+- Optional quest lines (`quest_lines` option) add more checks: Companions, College of Winterhold, Thieves Guild,
+  Dark Brotherhood and Daedric quests.
 
 ## What is the goal?
 
-Either defeat Alduin in Sovngarde, or absorb a set number of dragon souls (see the `goal` option).
+Defeat Alduin in Sovngarde, absorb a set number of dragon souls, finish the chosen quest lines, or both Alduin and
+the quest lines (see the `goal` option).
 
 ## What can show up from other worlds?
 
@@ -20,4 +23,4 @@ Gate keys, shout words, perk points, dragon souls, gold, potions, lockpicks, sou
 
 ## Status
 
-Early development: the APWorld generates, the game-side SKSE mod is not written yet.
+Early development: playable with the SKSE mod from this repository.

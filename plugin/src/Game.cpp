@@ -45,7 +45,6 @@ namespace
 	std::unordered_map<std::int64_t, ItemDef> g_items;
 	std::vector<LocationDef>                  g_locations;
 	std::vector<CityDef>                      g_cities;
-	RE::TESQuest*                             g_goalQuest{ nullptr };
 
 	// ------------------------------------------------------------------ //
 	// Per-save state (stored in the SKSE co-save)
@@ -74,6 +73,8 @@ namespace
 		std::string                      seedName;
 		int                              slot{ -1 };
 		int                              goal{ 0 };
+		std::vector<std::int64_t>        goalLocations;
+		std::uint32_t                    goalSouls{ 0 };
 		int                              dragonSoulChecks{ 0 };
 		bool                             autoUnlockShouts{ true };
 		bool                             deathLink{ false };
@@ -180,6 +181,23 @@ namespace
 			}
 			const auto slotData = a_msg.value("slot_data", json::object());
 			g_session.goal = slotData.value("goal", 0);
+			g_session.goalLocations.clear();
+			g_session.goalSouls = 0;
+			if (slotData.contains("goal_locations")) {
+				for (const auto& id : slotData["goal_locations"]) {
+					g_session.goalLocations.push_back(id.get<std::int64_t>());
+				}
+				g_session.goalSouls = slotData.value("goal_souls", 0u);
+			} else if (g_session.goal == 0) {
+				// Worlds from v0.1 only knew "alduin" (= Sovngarde) and "dragon_souls".
+				for (const auto& loc : g_locations) {
+					if (loc.name == "Sovngarde") {
+						g_session.goalLocations.push_back(loc.id);
+					}
+				}
+			} else {
+				g_session.goalSouls = static_cast<std::uint32_t>(slotData.value("dragon_soul_checks", 0));
+			}
 			g_session.dragonSoulChecks = slotData.value("dragon_soul_checks", 0);
 			g_session.autoUnlockShouts = slotData.value("auto_unlock_shouts", 1) != 0;
 			g_session.deathLink = slotData.value("death_link", 0) != 0;
@@ -432,8 +450,11 @@ namespace
 		}
 
 		if (!g_session.goalSent) {
-			const bool goal = g_session.goal == 0 ? (g_goalQuest && g_goalQuest->IsCompleted()) :
-			                                        g_save.soulsAbsorbed >= static_cast<std::uint32_t>(g_session.dragonSoulChecks);
+			bool goal = g_save.soulsAbsorbed >= g_session.goalSouls;
+			for (const auto id : g_session.goalLocations) {
+				goal = goal && g_session.checked.contains(id);
+			}
+			goal = goal && (g_session.goalSouls > 0 || !g_session.goalLocations.empty());
 			if (goal) {
 				Client::Get().Send({ { "cmd", "StatusUpdate" }, { "status", CLIENT_STATUS_GOAL } });
 				g_session.goalSent = true;
@@ -600,11 +621,6 @@ namespace Game
 			g_locations.push_back(std::move(def));
 		}
 
-		if (data.contains("goal_quest")) {
-			auto* form = LookupForm(data["goal_quest"].get<std::string>());
-			g_goalQuest = form ? form->As<RE::TESQuest>() : nullptr;
-			logger::info("Goal quest -> {}", FormInfo(g_goalQuest));
-		}
 
 		logger::info("Loaded {} items, {} locations, {} cities", g_items.size(), g_locations.size(), g_cities.size());
 	}

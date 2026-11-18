@@ -51,6 +51,64 @@ Q = {
     "MS01": 0x018B4B,   # The Forsworn Conspiracy
 }
 
+# Optional quest lines: location name -> (editor ID, FormID). Editor IDs and
+# names are printed in SkyrimArchipelago.log at startup for checking.
+QUEST_LINE_QUESTS = {
+    "Companions - Proving Honor": ("C01", 0x06E803),
+    "Companions - The Silver Hand": ("C03", 0x01CEF4),
+    "Companions - Blood's Honor": ("C04", 0x01CEF5),
+    "Companions - Purity of Revenge": ("C05", 0x06E805),
+    "Companions - Glory of the Dead": ("C06", 0x01CEF6),
+    "College - First Lessons": ("MG01", 0x01F251),
+    "College - Under Saarthal": ("MG02", 0x01F252),
+    "College - Hitting the Books": ("MG03", 0x01F253),
+    "College - Good Intentions": ("MG04", 0x01F254),
+    "College - Revealing the Unseen": ("MG06", 0x01F256),
+    "College - Containment": ("MG05", 0x01F255),
+    "College - The Staff of Magnus": ("MG07", 0x01F257),
+    "College - The Eye of Magnus": ("MG08", 0x01F258),
+    "Thieves Guild - Taking Care of Business": ("TG01", 0x01F326),
+    "Thieves Guild - Loud and Clear": ("TG02", 0x02154E),
+    "Thieves Guild - Dampened Spirits": ("TG03", 0x02154F),
+    "Thieves Guild - Scoundrel's Folly": ("TG04", 0x021550),
+    "Thieves Guild - Speaking With Silence": ("TG05", 0x021551),
+    "Thieves Guild - Hard Answers": ("TG06", 0x021552),
+    "Thieves Guild - The Pursuit": ("TG07", 0x021553),
+    "Thieves Guild - Trinity Restored": ("TG08A", 0x057F99),
+    "Thieves Guild - Blindsighted": ("TG08B", 0x021554),
+    "Thieves Guild - Darkness Returns": ("TG09", 0x021555),
+    "Dark Brotherhood - Innocence Lost": ("DB01", 0x01EA50),
+    "Dark Brotherhood - With Friends Like These": ("DB02", 0x01EA51),
+    "Dark Brotherhood - Sanctuary": ("DB02a", 0x022F47),
+    "Dark Brotherhood - Mourning Never Comes": ("DB03", 0x01EA52),
+    "Dark Brotherhood - Whispers in the Dark": ("DB04", 0x01EA53),
+    "Dark Brotherhood - The Silence Has Been Broken": ("DB04a", 0x02AD16),
+    "Dark Brotherhood - Bound Until Death": ("DB05", 0x01EA54),
+    "Dark Brotherhood - Breaching Security": ("DB06", 0x01EA55),
+    "Dark Brotherhood - The Cure for Madness": ("DB07", 0x01EA56),
+    "Dark Brotherhood - Recipe for Disaster": ("DB08", 0x01EA57),
+    "Dark Brotherhood - To Kill an Empire": ("DB09", 0x01EA58),
+    "Dark Brotherhood - Death Incarnate": ("DB10", 0x03CEDA),
+    "Dark Brotherhood - Hail Sithis!": ("DB11", 0x01EA59),
+    "Daedric - The Black Star": ("DA01", 0x028AD6),
+    "Daedric - Boethiah's Calling": ("DA02", 0x04D8D6),
+    "Daedric - A Daedra's Best Friend": ("DA03", 0x01BFC4),
+    "Daedric - Discerning the Transmundane": ("DA04", 0x02D512),
+    "Daedric - Ill Met by Moonlight": ("DA05", 0x02A49A),
+    "Daedric - The Cursed Tribe": ("DA06", 0x03B681),
+    "Daedric - Pieces of the Past": ("DA07", 0x0240B8),
+    "Daedric - The Only Cure": ("DA13", 0x08998D),
+    "Daedric - The Whispering Door": ("DA08", 0x04A37B),
+    "Daedric - The Break of Dawn": ("DA09", 0x04E4E1),
+    "Daedric - The House of Horrors": ("DA10", 0x022F08),
+    "Daedric - The Taste of Death": ("DA11", 0x02C358),
+    "Daedric - A Night to Remember": ("DA14", 0x01BB9B),
+    "Daedric - The Mind of Madness": ("DA15", 0x02AC68),
+    "Daedric - Waking Nightmare": ("DA16", 0x0242AF),
+}
+for _name, (_edid, _fid) in QUEST_LINE_QUESTS.items():
+    Q[_edid] = _fid
+
 # Location -> quest whose completion sends it. "Lessons" are approximated by
 # the completion of the quest during which the game teaches the shout; this
 # matches the APWorld logic for each of them.
@@ -83,6 +141,7 @@ LOCATION_QUEST = {
     "Riften - A Chance Arrangement": "TG00",
     "Markarth - The Forsworn Conspiracy": "MS01",
     "Bleak Falls Barrow - Word Wall": "MQ103",
+    **{name: edid for name, (edid, _) in QUEST_LINE_QUESTS.items()},
 }
 
 CITIES = {
@@ -144,7 +203,6 @@ def main() -> None:
     out = {
         "game": data.GAME_NAME,
         "cities": {c: {"worldspace": ws, "fr": fr} for c, (ws, fr) in CITIES.items()},
-        "goal_quest": form(Q["MQ304"]),
         "items": items,
         "locations": locations,
     }

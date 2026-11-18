@@ -155,11 +155,114 @@ def dragon_soul_location(n: int) -> str:
     return f"Dragon Soul {n}"
 
 
+def key_for(city: str) -> Req:
+    return (CITY_KEYS[city], 1)
+
+
+class QuestLine(NamedTuple):
+    steps: list[QuestStep]
+    # Sequential lines must be done in order; a step needs what earlier steps needed.
+    sequential: bool
+
+
+# Optional quest lines (YAML option "quest_lines"). Location names are prefixed
+# with the line name. Steps in a city region need that city's key.
+QUEST_LINES: dict[str, QuestLine] = {
+    "Companions": QuestLine([
+        QuestStep("Companions - Proving Honor", "Whiterun"),
+        QuestStep("Companions - The Silver Hand", "Whiterun"),
+        QuestStep("Companions - Blood's Honor", "Whiterun"),
+        QuestStep("Companions - Purity of Revenge", "Whiterun"),
+        QuestStep("Companions - Glory of the Dead", "Whiterun"),
+    ], sequential=True),
+    "College of Winterhold": QuestLine([
+        QuestStep("College - First Lessons", "Skyrim"),
+        QuestStep("College - Under Saarthal", "Skyrim"),
+        QuestStep("College - Hitting the Books", "Skyrim"),
+        QuestStep("College - Good Intentions", "Skyrim"),
+        QuestStep("College - Revealing the Unseen", "Skyrim"),
+        QuestStep("College - Containment", "Skyrim"),
+        QuestStep("College - The Staff of Magnus", "Skyrim"),
+        QuestStep("College - The Eye of Magnus", "Skyrim"),
+    ], sequential=True),
+    "Thieves Guild": QuestLine([
+        QuestStep("Thieves Guild - Taking Care of Business", "Riften"),
+        QuestStep("Thieves Guild - Loud and Clear", "Riften"),
+        QuestStep("Thieves Guild - Dampened Spirits", "Riften"),
+        QuestStep("Thieves Guild - Scoundrel's Folly", "Riften"),
+        QuestStep("Thieves Guild - Speaking With Silence", "Skyrim"),
+        QuestStep("Thieves Guild - Hard Answers", "Markarth"),
+        QuestStep("Thieves Guild - The Pursuit", "Skyrim"),
+        QuestStep("Thieves Guild - Trinity Restored", "Skyrim"),
+        QuestStep("Thieves Guild - Blindsighted", "Skyrim"),
+        QuestStep("Thieves Guild - Darkness Returns", "Skyrim"),
+    ], sequential=True),
+    "Dark Brotherhood": QuestLine([
+        QuestStep("Dark Brotherhood - Innocence Lost", "Windhelm"),
+        QuestStep("Dark Brotherhood - With Friends Like These", "Skyrim"),
+        QuestStep("Dark Brotherhood - Sanctuary", "Skyrim"),
+        QuestStep("Dark Brotherhood - Mourning Never Comes", "Skyrim"),
+        QuestStep("Dark Brotherhood - Whispers in the Dark", "Skyrim"),
+        QuestStep("Dark Brotherhood - The Silence Has Been Broken", "Skyrim"),
+        QuestStep("Dark Brotherhood - Bound Until Death", "Solitude"),
+        QuestStep("Dark Brotherhood - Breaching Security", "Skyrim"),
+        QuestStep("Dark Brotherhood - The Cure for Madness", "Skyrim"),
+        QuestStep("Dark Brotherhood - Recipe for Disaster", "Skyrim"),
+        QuestStep("Dark Brotherhood - To Kill an Empire", "Solitude"),
+        QuestStep("Dark Brotherhood - Death Incarnate", "Skyrim"),
+        QuestStep("Dark Brotherhood - Hail Sithis!", "Solitude"),
+    ], sequential=True),
+    "Daedric Quests": QuestLine([
+        QuestStep("Daedric - The Black Star", "Skyrim"),
+        QuestStep("Daedric - Boethiah's Calling", "Skyrim"),
+        QuestStep("Daedric - A Daedra's Best Friend", "Skyrim"),
+        QuestStep("Daedric - Discerning the Transmundane", "Skyrim"),
+        QuestStep("Daedric - Ill Met by Moonlight", "Skyrim"),
+        QuestStep("Daedric - The Cursed Tribe", "Skyrim"),
+        QuestStep("Daedric - Pieces of the Past", "Skyrim"),
+        QuestStep("Daedric - The Only Cure", "Skyrim"),
+        QuestStep("Daedric - The Whispering Door", "Whiterun"),
+        QuestStep("Daedric - The Break of Dawn", "Skyrim"),
+        QuestStep("Daedric - The House of Horrors", "Markarth"),
+        QuestStep("Daedric - The Taste of Death", "Markarth"),
+        QuestStep("Daedric - A Night to Remember", "Skyrim"),
+        QuestStep("Daedric - The Mind of Madness", "Solitude"),
+        QuestStep("Daedric - Waking Nightmare", "Skyrim"),
+    ], sequential=False),
+}
+
+# A city quest that opens a line: its city key is needed for the whole line.
+QUEST_LINE_START_KEYS: dict[str, list[Req]] = {
+    "Companions": [key_for("Whiterun")],
+    "Thieves Guild": [key_for("Riften")],
+}
+
+
+def quest_line_requirements(line_name: str) -> dict[str, list[Req]]:
+    """Requirements of each step of a quest line (cumulative if sequential)."""
+    line = QUEST_LINES[line_name]
+    result: dict[str, list[Req]] = {}
+    needed: dict[str, int] = {item: n for item, n in QUEST_LINE_START_KEYS.get(line_name, [])}
+    for step in line.steps:
+        own = dict(needed) if line.sequential else {item: n for item, n in QUEST_LINE_START_KEYS.get(line_name, [])}
+        reqs = list(step.requires)
+        if step.region in CITY_KEYS:
+            reqs.append(key_for(step.region))
+        for item, count in reqs:
+            own[item] = max(own.get(item, 0), count)
+        if line.sequential:
+            needed = own
+        result[step.name] = list(own.items())
+    return result
+
+
 _locations: list[str] = (
     [s.name for s in MAIN_QUEST]
     + [s.name for s in CITY_QUESTS]
     + [s.name for s in WORD_WALLS]
     + [dragon_soul_location(n) for n in range(1, MAX_DRAGON_SOULS + 1)]
+    # New locations are always appended, so existing IDs never change.
+    + [s.name for line in QUEST_LINES.values() for s in line.steps]
 )
 
 LOCATION_TABLE: dict[str, int] = {

@@ -43,3 +43,30 @@ class TestDragonSoulGoal(SkyrimTestBase):
 
 class TestMinimal(SkyrimTestBase):
     options = {"dragon_soul_checks": 0, "perk_points": 20, "trap_chance": 100}
+
+
+class TestAllQuestLines(SkyrimTestBase):
+    options = {
+        "quest_lines": ["Companions", "College of Winterhold", "Thieves Guild", "Dark Brotherhood", "Daedric Quests"],
+        "goal": "alduin_and_quest_lines",
+    }
+
+    def test_thieves_guild_needs_markarth_late(self) -> None:
+        self.collect_by_name("Riften Gate Key")
+        self.assertTrue(self.can_reach_location("Thieves Guild - Scoundrel's Folly"))
+        self.assertFalse(self.can_reach_location("Thieves Guild - Darkness Returns"))
+        self.collect_by_name("Markarth Gate Key")
+        self.assertTrue(self.can_reach_location("Thieves Guild - Darkness Returns"))
+
+    def test_daedric_quests_are_independent(self) -> None:
+        self.assertTrue(self.can_reach_location("Daedric - The Black Star"))
+        self.assertFalse(self.can_reach_location("Daedric - The Mind of Madness"))
+
+    def test_slot_data_goal(self) -> None:
+        slot_data = self.world.fill_slot_data()
+        # Sovngarde + last step of 4 sequential lines + all 15 Daedric quests.
+        self.assertEqual(len(slot_data["goal_locations"]), 1 + 4 + 15)
+
+
+class TestQuestLinesGoalOnly(SkyrimTestBase):
+    options = {"quest_lines": ["College of Winterhold"], "goal": "quest_lines"}

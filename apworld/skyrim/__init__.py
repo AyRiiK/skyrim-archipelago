@@ -10,8 +10,9 @@ from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import set_rule
 
 from . import data
-from .data import (CITY_KEYS, CITY_QUESTS, GAME_NAME, ITEM_TABLE, LOCATION_TABLE, MAIN_QUEST, SHOUTS,
-                   WORD_WALLS, WORDS_PER_SHOUT, Req, dragon_soul_location, progressive_shout)
+from .data import (CITY_KEYS, CITY_QUESTS, GAME_NAME, ITEM_TABLE, LOCATION_TABLE, MAIN_QUEST, QUEST_LINES, SHOUTS,
+                   WORD_WALLS, WORDS_PER_SHOUT, Req, dragon_soul_location, progressive_shout,
+                   quest_line_requirements)
 from .options import SkyrimOptions, option_groups
 
 _CLASSIFICATIONS = {
@@ -90,12 +91,16 @@ class SkyrimWorld(World):
         "Main Quest": {s.name for s in MAIN_QUEST},
         "City Quests": {s.name for s in CITY_QUESTS},
         "Dragon Souls": {dragon_soul_location(n) for n in range(1, data.MAX_DRAGON_SOULS + 1)},
+        **{line: {s.name for s in QUEST_LINES[line].steps} for line in QUEST_LINES},
     }
 
     # ------------------------------------------------------------------ #
     def generate_early(self) -> None:
         if self.options.goal == self.options.goal.option_dragon_souls and self.options.dragon_soul_checks == 0:
             raise OptionError(f"{self.player_name}: the dragon_souls goal needs dragon_soul_checks of at least 1.")
+        if self.options.goal in (self.options.goal.option_quest_lines, self.options.goal.option_alduin_and_quest_lines) \
+                and not self.options.quest_lines.value:
+            raise OptionError(f"{self.player_name}: the {self.options.goal.current_key} goal needs at least one quest line.")
         if self.options.start_with_whiterun_key:
             self.multiworld.push_precollected(self.create_item(CITY_KEYS["Whiterun"]))
 
@@ -114,6 +119,9 @@ class SkyrimWorld(World):
             add(step.region, step.name)
         for n in range(1, self.options.dragon_soul_checks + 1):
             add("Skyrim", dragon_soul_location(n))
+        for line in sorted(self.options.quest_lines.value):
+            for step in QUEST_LINES[line].steps:
+                add(step.region, step.name)
 
         goal = SkyrimLocation(self.player, GOAL_EVENT, None, skyrim)
         goal.place_locked_item(SkyrimItem(VICTORY_ITEM, ItemClassification.progression, None, self.player))
@@ -174,17 +182,50 @@ class SkyrimWorld(World):
         for n in range(1, self.options.dragon_soul_checks + 1):
             set_rule(self.get_location(dragon_soul_location(n)), _has_all(mq["Dragon Rising"], self.player))
 
-        if self.options.goal == self.options.goal.option_alduin:
-            goal_reqs = mq["Sovngarde"]
-        else:
-            goal_reqs = mq["Dragon Rising"]
-        set_rule(self.get_location(GOAL_EVENT), _has_all(goal_reqs, self.player))
+        for line in self.options.quest_lines.value:
+            reqs = quest_line_requirements(line)
+            for step in QUEST_LINES[line].steps:
+                set_rule(self.get_location(step.name), _has_all(reqs[step.name], self.player))
+
+        goal_reqs: dict[str, int] = {}
+        for item, count in self._goal_requirements():
+            goal_reqs[item] = max(goal_reqs.get(item, 0), count)
+        set_rule(self.get_location(GOAL_EVENT), _has_all(list(goal_reqs.items()), self.player))
 
         self.multiworld.completion_condition[self.player] = lambda state: state.has(VICTORY_ITEM, self.player)
+
+    def _goal_locations(self) -> list[str]:
+        """Locations the player must complete for the goal (besides dragon souls)."""
+        goal = self.options.goal
+        names: list[str] = []
+        if goal in (goal.option_alduin, goal.option_alduin_and_quest_lines):
+            names.append("Sovngarde")
+        if goal in (goal.option_quest_lines, goal.option_alduin_and_quest_lines):
+            for line in sorted(self.options.quest_lines.value):
+                steps = QUEST_LINES[line].steps
+                names += [s.name for s in steps] if not QUEST_LINES[line].sequential else [steps[-1].name]
+        return names
+
+    def _goal_requirements(self) -> list[Req]:
+        mq = data.main_quest_requirements()
+        reqs: list[Req] = []
+        if self.options.goal == self.options.goal.option_dragon_souls:
+            reqs += mq["Dragon Rising"]
+        for name in self._goal_locations():
+            if name in mq:
+                reqs += mq[name]
+            else:
+                line = next(l for l in QUEST_LINES if name in {s.name for s in QUEST_LINES[l].steps})
+                reqs += quest_line_requirements(line)[name]
+        return reqs
 
     # ------------------------------------------------------------------ #
     def fill_slot_data(self) -> Mapping[str, Any]:
         return {
+            "goal_locations": [LOCATION_TABLE[n] for n in self._goal_locations()],
+            "goal_souls": self.options.dragon_soul_checks.value
+            if self.options.goal == self.options.goal.option_dragon_souls else 0,
+            "quest_lines": sorted(self.options.quest_lines.value),
             **self.options.as_dict(
                 "goal", "dragon_soul_checks", "start_with_whiterun_key", "auto_unlock_shouts", "death_link"
             ),

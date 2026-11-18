@@ -1,0 +1,26 @@
+name: Ayriik
+game: Skyrim Special Edition
+description: Partie Skyrim Archipelago
+
+Skyrim Special Edition:
+  # Objectif :
+  #   alduin                 -> finir la quête principale
+  #   dragon_souls           -> absorber autant d'âmes que dragon_soul_checks
+  #   quest_lines            -> finir toutes les lignes de quêtes choisies plus bas
+  #   alduin_and_quest_lines -> les deux
+  goal: alduin
+  # Lignes de quêtes en plus (chacune rallonge la partie). Enlève celles que tu ne veux pas.
+  #   Companions, College of Winterhold, Thieves Guild, Dark Brotherhood, Daedric Quests
+  quest_lines: []
+  # Nombre d'âmes de dragon qui envoient un check (0 à 30)
+  dragon_soul_checks: 10
+  # Commencer avec la clé de Blancherive (conseillé)
+  start_with_whiterun_key: true
+  # Points d'atout dans le pool d'objets (0 à 20)
+  perk_points: 5
+  # Pourcentage de pièges parmi les objets de remplissage (0 à 100)
+  trap_chance: 15
+  # Les mots de pouvoir reçus sont débloqués directement, sans âme de dragon
+  auto_unlock_shouts: true
+  # DeathLink : quand un joueur meurt, tout le monde meurt
+  death_link: true

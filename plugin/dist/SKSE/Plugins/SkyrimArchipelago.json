@@ -22,7 +22,6 @@
       "fr": "Markarth"
     }
   },
-  "goal_quest": "Skyrim.esm|0x046EF1",
   "items": {
     "1398341632": {
       "type": "gate_key",
@@ -445,6 +444,261 @@
       "id": 1398345785,
       "name": "Dragon Soul 30",
       "dragon_soul": 30
+    },
+    {
+      "id": 1398345786,
+      "name": "Companions - Proving Honor",
+      "quest": "Skyrim.esm|0x06E803"
+    },
+    {
+      "id": 1398345787,
+      "name": "Companions - The Silver Hand",
+      "quest": "Skyrim.esm|0x01CEF4"
+    },
+    {
+      "id": 1398345788,
+      "name": "Companions - Blood's Honor",
+      "quest": "Skyrim.esm|0x01CEF5"
+    },
+    {
+      "id": 1398345789,
+      "name": "Companions - Purity of Revenge",
+      "quest": "Skyrim.esm|0x06E805"
+    },
+    {
+      "id": 1398345790,
+      "name": "Companions - Glory of the Dead",
+      "quest": "Skyrim.esm|0x01CEF6"
+    },
+    {
+      "id": 1398345791,
+      "name": "College - First Lessons",
+      "quest": "Skyrim.esm|0x01F251"
+    },
+    {
+      "id": 1398345792,
+      "name": "College - Under Saarthal",
+      "quest": "Skyrim.esm|0x01F252"
+    },
+    {
+      "id": 1398345793,
+      "name": "College - Hitting the Books",
+      "quest": "Skyrim.esm|0x01F253"
+    },
+    {
+      "id": 1398345794,
+      "name": "College - Good Intentions",
+      "quest": "Skyrim.esm|0x01F254"
+    },
+    {
+      "id": 1398345795,
+      "name": "College - Revealing the Unseen",
+      "quest": "Skyrim.esm|0x01F256"
+    },
+    {
+      "id": 1398345796,
+      "name": "College - Containment",
+      "quest": "Skyrim.esm|0x01F255"
+    },
+    {
+      "id": 1398345797,
+      "name": "College - The Staff of Magnus",
+      "quest": "Skyrim.esm|0x01F257"
+    },
+    {
+      "id": 1398345798,
+      "name": "College - The Eye of Magnus",
+      "quest": "Skyrim.esm|0x01F258"
+    },
+    {
+      "id": 1398345799,
+      "name": "Thieves Guild - Taking Care of Business",
+      "quest": "Skyrim.esm|0x01F326"
+    },
+    {
+      "id": 1398345800,
+      "name": "Thieves Guild - Loud and Clear",
+      "quest": "Skyrim.esm|0x02154E"
+    },
+    {
+      "id": 1398345801,
+      "name": "Thieves Guild - Dampened Spirits",
+      "quest": "Skyrim.esm|0x02154F"
+    },
+    {
+      "id": 1398345802,
+      "name": "Thieves Guild - Scoundrel's Folly",
+      "quest": "Skyrim.esm|0x021550"
+    },
+    {
+      "id": 1398345803,
+      "name": "Thieves Guild - Speaking With Silence",
+      "quest": "Skyrim.esm|0x021551"
+    },
+    {
+      "id": 1398345804,
+      "name": "Thieves Guild - Hard Answers",
+      "quest": "Skyrim.esm|0x021552"
+    },
+    {
+      "id": 1398345805,
+      "name": "Thieves Guild - The Pursuit",
+      "quest": "Skyrim.esm|0x021553"
+    },
+    {
+      "id": 1398345806,
+      "name": "Thieves Guild - Trinity Restored",
+      "quest": "Skyrim.esm|0x057F99"
+    },
+    {
+      "id": 1398345807,
+      "name": "Thieves Guild - Blindsighted",
+      "quest": "Skyrim.esm|0x021554"
+    },
+    {
+      "id": 1398345808,
+      "name": "Thieves Guild - Darkness Returns",
+      "quest": "Skyrim.esm|0x021555"
+    },
+    {
+      "id": 1398345809,
+      "name": "Dark Brotherhood - Innocence Lost",
+      "quest": "Skyrim.esm|0x01EA50"
+    },
+    {
+      "id": 1398345810,
+      "name": "Dark Brotherhood - With Friends Like These",
+      "quest": "Skyrim.esm|0x01EA51"
+    },
+    {
+      "id": 1398345811,
+      "name": "Dark Brotherhood - Sanctuary",
+      "quest": "Skyrim.esm|0x022F47"
+    },
+    {
+      "id": 1398345812,
+      "name": "Dark Brotherhood - Mourning Never Comes",
+      "quest": "Skyrim.esm|0x01EA52"
+    },
+    {
+      "id": 1398345813,
+      "name": "Dark Brotherhood - Whispers in the Dark",
+      "quest": "Skyrim.esm|0x01EA53"
+    },
+    {
+      "id": 1398345814,
+      "name": "Dark Brotherhood - The Silence Has Been Broken",
+      "quest": "Skyrim.esm|0x02AD16"
+    },
+    {
+      "id": 1398345815,
+      "name": "Dark Brotherhood - Bound Until Death",
+      "quest": "Skyrim.esm|0x01EA54"
+    },
+    {
+      "id": 1398345816,
+      "name": "Dark Brotherhood - Breaching Security",
+      "quest": "Skyrim.esm|0x01EA55"
+    },
+    {
+      "id": 1398345817,
+      "name": "Dark Brotherhood - The Cure for Madness",
+      "quest": "Skyrim.esm|0x01EA56"
+    },
+    {
+      "id": 1398345818,
+      "name": "Dark Brotherhood - Recipe for Disaster",
+      "quest": "Skyrim.esm|0x01EA57"
+    },
+    {
+      "id": 1398345819,
+      "name": "Dark Brotherhood - To Kill an Empire",
+      "quest": "Skyrim.esm|0x01EA58"
+    },
+    {
+      "id": 1398345820,
+      "name": "Dark Brotherhood - Death Incarnate",
+      "quest": "Skyrim.esm|0x03CEDA"
+    },
+    {
+      "id": 1398345821,
+      "name": "Dark Brotherhood - Hail Sithis!",
+      "quest": "Skyrim.esm|0x01EA59"
+    },
+    {
+      "id": 1398345822,
+      "name": "Daedric - The Black Star",
+      "quest": "Skyrim.esm|0x028AD6"
+    },
+    {
+      "id": 1398345823,
+      "name": "Daedric - Boethiah's Calling",
+      "quest": "Skyrim.esm|0x04D8D6"
+    },
+    {
+      "id": 1398345824,
+      "name": "Daedric - A Daedra's Best Friend",
+      "quest": "Skyrim.esm|0x01BFC4"
+    },
+    {
+      "id": 1398345825,
+      "name": "Daedric - Discerning the Transmundane",
+      "quest": "Skyrim.esm|0x02D512"
+    },
+    {
+      "id": 1398345826,
+      "name": "Daedric - Ill Met by Moonlight",
+      "quest": "Skyrim.esm|0x02A49A"
+    },
+    {
+      "id": 1398345827,
+      "name": "Daedric - The Cursed Tribe",
+      "quest": "Skyrim.esm|0x03B681"
+    },
+    {
+      "id": 1398345828,
+      "name": "Daedric - Pieces of the Past",
+      "quest": "Skyrim.esm|0x0240B8"
+    },
+    {
+      "id": 1398345829,
+      "name": "Daedric - The Only Cure",
+      "quest": "Skyrim.esm|0x08998D"
+    },
+    {
+      "id": 1398345830,
+      "name": "Daedric - The Whispering Door",
+      "quest": "Skyrim.esm|0x04A37B"
+    },
+    {
+      "id": 1398345831,
+      "name": "Daedric - The Break of Dawn",
+      "quest": "Skyrim.esm|0x04E4E1"
+    },
+    {
+      "id": 1398345832,
+      "name": "Daedric - The House of Horrors",
+      "quest": "Skyrim.esm|0x022F08"
+    },
+    {
+      "id": 1398345833,
+      "name": "Daedric - The Taste of Death",
+      "quest": "Skyrim.esm|0x02C358"
+    },
+    {
+      "id": 1398345834,
+      "name": "Daedric - A Night to Remember",
+      "quest": "Skyrim.esm|0x01BB9B"
+    },
+    {
+      "id": 1398345835,
+      "name": "Daedric - The Mind of Madness",
+      "quest": "Skyrim.esm|0x02AC68"
+    },
+    {
+      "id": 1398345836,
+      "name": "Daedric - Waking Nightmare",
+      "quest": "Skyrim.esm|0x0242AF"
     }
   ]
 }
